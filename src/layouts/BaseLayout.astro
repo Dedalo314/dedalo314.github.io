@@ -1,0 +1,106 @@
+---
+import ThemeToggle from '../components/ThemeToggle.astro';
+const { title } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+      integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV"
+      crossorigin="anonymous"
+    />
+    <script is:inline>
+      const theme = (() => {
+        if (
+          typeof localStorage !== 'undefined' &&
+          localStorage.getItem('theme')
+        ) {
+          return localStorage.getItem('theme');
+        }
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+        }
+        return 'light';
+      })();
+
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+
+      window.localStorage.setItem('theme', theme);
+    </script>
+    <style is:global>
+      /* Explicitly hide MathML to prevent double-rendering if not handled by KaTeX CSS */
+      .katex-mathml {
+        display: none !important;
+      }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    class="bg-white dark:bg-black text-gray-900 dark:text-gray-200 min-h-screen flex flex-col font-sans transition-colors duration-300"
+  >
+    <header
+      class="sticky top-0 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800"
+    >
+      <nav
+        class="max-w-4xl mx-auto px-6 h-16 flex justify-between items-center"
+      >
+        <a
+          href="/"
+          class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500"
+          >MathPhysicsAI</a
+        >
+        <div class="flex items-center space-x-8 text-sm font-semibold">
+          <div class="space-x-8">
+            <a
+              href="/blog"
+              class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-white transition-colors"
+              >Blog</a
+            >
+            <a
+              href="/about"
+              class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-white transition-colors"
+              >About</a
+            >
+          </div>
+          <ThemeToggle />
+        </div>
+      </nav>
+    </header>
+    <main class="flex-grow max-w-4xl mx-auto px-6 py-12 w-full">
+      <slot />
+    </main>
+    <footer
+      class="py-12 border-t border-gray-100 dark:border-gray-900 text-center"
+    >
+      <div class="max-w-4xl mx-auto px-6 flex flex-col items-center space-y-4">
+        <div
+          class="text-lg font-bold tracking-tight text-gray-900 dark:text-gray-400"
+        >
+          MathPhysicsAI
+        </div>
+        <p class="text-sm text-gray-500 dark:text-gray-600">
+          A journey through numbers, forces, and intelligence.
+        </p>
+        <div class="text-xs text-gray-400 dark:text-gray-700 font-mono">
+          &copy; 2026 MathPhysicsAI. All rights reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

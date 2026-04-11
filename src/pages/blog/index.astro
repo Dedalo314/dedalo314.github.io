@@ -1,0 +1,73 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<BaseLayout title="Blog | MathPhysicsAI">
+  <section class="max-w-4xl mx-auto py-20 space-y-16">
+    <header class="text-center space-y-6">
+      <div
+        class="inline-flex items-center px-3 py-1 text-xs font-semibold uppercase tracking-widest border border-blue-500/20 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full mb-4"
+      >
+        Writing & Insights
+      </div>
+      <h1
+        class="text-5xl md:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white"
+      >
+        Insights from the <span
+          class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500"
+          >Frontiers</span>
+      </h1>
+      <p
+        class="mt-4 text-xl text-gray-600 dark:text-gray-500 max-w-2xl mx-auto leading-relaxed"
+      >
+        Thoughts, theories, and explorations in mathematics, physics, and AI.
+      </p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+      {
+        posts.map((post) => (
+          <article class="group relative bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800/60 rounded-2xl overflow-hidden hover:border-blue-500/30 transition-all hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.1)]">
+            <div class="p-8 space-y-4">
+              <div class="flex items-center space-x-3 text-xs font-mono text-gray-500 uppercase tracking-tighter">
+                <span>
+                  {new Date(post.data.pubDate).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </span>
+                <span class="w-1 h-1 bg-gray-300 dark:bg-gray-700 rounded-full" />
+                <span class="text-blue-600 dark:text-blue-500 font-bold uppercase tracking-wider">
+                  {post.slug.split('/')[0]}
+                </span>
+              </div>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight">
+                <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+              </h2>
+              <p class="text-gray-600 dark:text-gray-500 line-clamp-3 font-sans leading-relaxed">
+                {post.data.description}
+              </p>
+              <div class="pt-6">
+                <a
+                  href={`/blog/${post.slug}`}
+                  class="inline-flex items-center text-sm font-bold text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-white transition-all group-hover:translate-x-1"
+                >
+                  Read Article{' '}
+                  <span class="ml-2 transition-transform group-hover:translate-x-1">
+                    &rarr;
+                  </span>
+                </a>
+              </div>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

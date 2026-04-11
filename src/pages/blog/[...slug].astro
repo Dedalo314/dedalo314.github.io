@@ -1,0 +1,68 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: post,
+  }));
+}
+
+const post = Astro.props;
+const { Content } = await post.render();
+---
+
+<BaseLayout title={post.data.title}>
+  <div class="max-w-3xl mx-auto py-12">
+    <header class="mb-16 space-y-8">
+      <div
+        class="inline-flex items-center text-xs font-mono font-bold text-blue-600 dark:text-blue-500 uppercase tracking-widest border border-blue-500/20 bg-blue-500/10 px-3 py-1 rounded-full"
+      >
+        Blog Article
+      </div>
+      <h1
+        class="text-5xl md:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight"
+      >
+        {post.data.title}
+      </h1>
+      <div class="flex items-center space-x-4">
+        <div
+          class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold"
+        >
+          M
+        </div>
+        <div class="text-sm">
+          <div class="text-gray-900 dark:text-gray-200 font-bold">
+            MathPhysicsAI
+          </div>
+          <div class="text-gray-600 dark:text-gray-500">
+            Published on {
+              new Date(post.data.pubDate).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })
+            }
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <article
+      class="prose dark:prose-invert prose-lg prose-blue max-w-none prose-headings:font-extrabold prose-headings:tracking-tight prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-blockquote:border-blue-500 prose-pre:bg-gray-100 dark:prose-pre:bg-gray-900/50 prose-pre:border prose-pre:border-gray-200 dark:prose-pre:border-gray-800"
+    >
+      <Content />
+    </article>
+
+    <div class="mt-20 pt-12 border-t border-gray-200 dark:border-gray-900">
+      <a
+        href="/blog"
+        class="inline-flex items-center text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-white font-bold transition-colors"
+      >
+        <span class="mr-2">&larr;</span> Back to all articles
+      </a>
+    </div>
+  </div>
+</BaseLayout>
