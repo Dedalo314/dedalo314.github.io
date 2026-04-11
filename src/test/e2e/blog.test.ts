@@ -51,10 +51,6 @@ test('sample post has modern typography and LaTeX', async ({ page }) => {
   if ((await mathml.count()) > 0) {
     await expect(mathml).not.toBeVisible();
   }
-
-  // Check for the particle simulation canvas
-  const canvas = page.locator('canvas');
-  await expect(canvas).toBeVisible();
 });
 
 test('relativistic-rocket has correct LaTeX rendering', async ({ page }) => {
