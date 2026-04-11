@@ -13,6 +13,10 @@ test('homepage should load and have correct title', async ({ page }) => {
   await expect(page.locator('span.text-transparent')).toContainText(
     'Frontiers'
   );
+
+  // Verify favicon is present in the head
+  const favicon = page.locator('link[rel="icon"]');
+  await expect(favicon).toHaveAttribute('href', '/favicon.svg');
 });
 
 test('blog index lists posts with modern cards', async ({ page }) => {
