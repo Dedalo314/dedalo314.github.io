@@ -1,6 +1,7 @@
 # build output
 dist/
 .astro/
+!.nojekyll
 
 # dependencies
 node_modules/
