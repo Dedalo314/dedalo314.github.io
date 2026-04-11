@@ -27,8 +27,9 @@ test('blog index lists posts with modern cards', async ({ page }) => {
 });
 
 test('sample post has modern typography and LaTeX', async ({ page }) => {
-  await page.goto('/blog/hello-world');
-  await expect(page.locator('h1')).toHaveClass(/text-5xl/);
+  await page.goto('/blog/relativistic-rocket');
+  await page.waitForSelector('h1');
+  await expect(page.locator('h1').first()).toHaveClass(/text-5xl/);
 
   // Check for the blog content area with prose and dark:prose-invert class
   const article = page.locator('article');
