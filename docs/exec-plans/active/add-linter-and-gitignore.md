@@ -15,6 +15,7 @@
 5. [x] Add `lint` and `format` scripts to `package.json`.
 6. [x] Update `.github/workflows/deploy.yml` to include a linting step.
 7. [x] Run linting and formatting locally to verify.
+8. [x] Resolve dependency conflict in CI by downgrading Astro integrations to v4.
 
 ## Verification Steps
 
