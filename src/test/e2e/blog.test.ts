@@ -10,9 +10,13 @@ test('homepage should load and have correct title', async ({ page }) => {
   // Verify modern styling elements
   const heroHeading = page.locator('h1');
   await expect(heroHeading).toHaveClass(/text-6xl/);
-  await expect(page.locator('span.text-transparent')).toContainText(
+  await expect(heroHeading.locator('span.text-transparent')).toContainText(
     'Frontiers'
   );
+
+  // Verify favicon logo is present in the header
+  const headerLogo = page.locator('header img[alt="MathPhysicsAI Logo"]');
+  await expect(headerLogo).toBeVisible();
 
   // Verify favicon is present in the head
   const favicon = page.locator('link[rel="icon"]');
