@@ -2,6 +2,7 @@ import { test, expect, devices } from '@playwright/test';
 
 test.use({
   ...devices['iPhone 13'],
+  defaultBrowserType: 'chromium'
 });
 
 test('mobile responsiveness check', async ({ page }) => {
