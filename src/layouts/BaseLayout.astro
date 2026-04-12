@@ -58,24 +58,24 @@ const { title } = Astro.props;
       class="sticky top-0 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800"
     >
       <nav
-        class="max-w-4xl mx-auto px-6 h-16 flex justify-between items-center"
+        class="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex justify-between items-center"
       >
         <a
           href="/"
-          class="flex items-center space-x-3 group transition-transform hover:scale-[1.02] active:scale-95"
+          class="flex items-center space-x-2 sm:space-x-3 group transition-transform hover:scale-[1.02] active:scale-95"
         >
           <img
             src="/favicon.svg"
             alt="MathPhysicsAI Logo"
-            class="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-800 shadow-sm"
+            class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-gray-200 dark:border-gray-800 shadow-sm"
           />
           <span
-            class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500"
+            class="text-lg sm:text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500 truncate max-w-[140px] sm:max-w-none"
             >MathPhysicsAI</span
           >
         </a>
-        <div class="flex items-center space-x-8 text-sm font-semibold">
-          <div class="space-x-8">
+        <div class="flex items-center space-x-4 sm:space-x-8 text-sm font-semibold">
+          <div class="flex items-center space-x-4 sm:space-x-8">
             <a
               href="/blog"
               class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-white transition-colors"
@@ -91,13 +91,13 @@ const { title } = Astro.props;
         </div>
       </nav>
     </header>
-    <main class="flex-grow max-w-4xl mx-auto px-6 py-12 w-full">
+    <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 w-full">
       <slot />
     </main>
     <footer
-      class="py-12 border-t border-gray-100 dark:border-gray-900 text-center"
+      class="py-8 sm:py-12 border-t border-gray-100 dark:border-gray-900 text-center"
     >
-      <div class="max-w-4xl mx-auto px-6 flex flex-col items-center space-y-4">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col items-center space-y-4">
         <img
           src="/favicon.svg"
           alt="MathPhysicsAI Logo"
