@@ -6,7 +6,9 @@ const posts = (await getCollection('blog')).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
-const allTags = [...new Set(posts.flatMap((post) => post.data.tags || []))].sort();
+const allTags = [
+  ...new Set(posts.flatMap((post) => post.data.tags || [])),
+].sort();
 ---
 
 <BaseLayout title="Blog | MathPhysicsAI">
@@ -31,30 +33,35 @@ const allTags = [...new Set(posts.flatMap((post) => post.data.tags || []))].sort
         Thoughts, theories, and explorations in mathematics, physics, and AI.
       </p>
 
-      {allTags.length > 0 && (
-        <div class="flex flex-wrap justify-center gap-2 pt-8">
-          <button
-            class="tag-filter active px-4 py-1.5 rounded-full text-sm font-medium transition-all border border-gray-200 dark:border-gray-800 hover:border-blue-500/50 bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400"
-            data-tag="all"
-          >
-            All Posts
-          </button>
-          {allTags.map((tag) => (
+      {
+        allTags.length > 0 && (
+          <div class="flex flex-wrap justify-center gap-2 pt-8">
             <button
-              class="tag-filter px-4 py-1.5 rounded-full text-sm font-medium transition-all border border-gray-200 dark:border-gray-800 hover:border-blue-500/50 bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400"
-              data-tag={tag}
+              class="tag-filter active px-4 py-1.5 rounded-full text-sm font-medium transition-all border border-gray-200 dark:border-gray-800 hover:border-blue-500/50 bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400"
+              data-tag="all"
             >
-              {tag}
+              All Posts
             </button>
-          ))}
-        </div>
-      )}
+            {allTags.map((tag) => (
+              <button
+                class="tag-filter px-4 py-1.5 rounded-full text-sm font-medium transition-all border border-gray-200 dark:border-gray-800 hover:border-blue-500/50 bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400"
+                data-tag={tag}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        )
+      }
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 px-4 sm:px-0" id="posts-grid">
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 px-4 sm:px-0"
+      id="posts-grid"
+    >
       {
         posts.map((post) => (
-          <article 
+          <article
             class="post-card group relative bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800/60 rounded-2xl overflow-hidden hover:border-blue-500/30 transition-all hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.1)]"
             data-tags={(post.data.tags || []).join(',')}
           >
@@ -69,7 +76,7 @@ const allTags = [...new Set(posts.flatMap((post) => post.data.tags || []))].sort
                 </span>
                 <span class="w-1 h-1 bg-gray-300 dark:bg-gray-700 rounded-full" />
                 <div class="flex gap-2">
-                  {(post.data.tags || []).map(tag => (
+                  {(post.data.tags || []).map((tag) => (
                     <span class="text-blue-600 dark:text-blue-500 font-bold uppercase tracking-wider">
                       {tag}
                     </span>
@@ -106,21 +113,45 @@ const allTags = [...new Set(posts.flatMap((post) => post.data.tags || []))].sort
     const buttons = document.querySelectorAll('.tag-filter');
     const cards = document.querySelectorAll('.post-card');
 
-    buttons.forEach(button => {
+    buttons.forEach((button) => {
       button.addEventListener('click', () => {
         const selectedTag = button.getAttribute('data-tag');
-        
+
         // Update button states
-        buttons.forEach(btn => {
-          btn.classList.remove('active', 'bg-blue-600', 'text-white', 'border-blue-600');
-          btn.classList.add('bg-white', 'dark:bg-gray-900', 'text-gray-600', 'dark:text-gray-400', 'border-gray-200', 'dark:border-gray-800');
+        buttons.forEach((btn) => {
+          btn.classList.remove(
+            'active',
+            'bg-blue-600',
+            'text-white',
+            'border-blue-600'
+          );
+          btn.classList.add(
+            'bg-white',
+            'dark:bg-gray-900',
+            'text-gray-600',
+            'dark:text-gray-400',
+            'border-gray-200',
+            'dark:border-gray-800'
+          );
         });
-        
-        button.classList.add('active', 'bg-blue-600', 'text-white', 'border-blue-600');
-        button.classList.remove('bg-white', 'dark:bg-gray-900', 'text-gray-600', 'dark:text-gray-400', 'border-gray-200', 'dark:border-gray-800');
+
+        button.classList.add(
+          'active',
+          'bg-blue-600',
+          'text-white',
+          'border-blue-600'
+        );
+        button.classList.remove(
+          'bg-white',
+          'dark:bg-gray-900',
+          'text-gray-600',
+          'dark:text-gray-400',
+          'border-gray-200',
+          'dark:border-gray-800'
+        );
 
         // Filter cards
-        cards.forEach(card => {
+        cards.forEach((card) => {
           const cardTags = card.getAttribute('data-tags')?.split(',') || [];
           if (selectedTag === 'all' || cardTags.includes(selectedTag)) {
             (card as HTMLElement).style.display = 'block';
@@ -135,7 +166,14 @@ const allTags = [...new Set(posts.flatMap((post) => post.data.tags || []))].sort
     const allButton = document.querySelector('[data-tag="all"]');
     if (allButton) {
       allButton.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
-      allButton.classList.remove('bg-white', 'dark:bg-gray-900', 'text-gray-600', 'dark:text-gray-400', 'border-gray-200', 'dark:border-gray-800');
+      allButton.classList.remove(
+        'bg-white',
+        'dark:bg-gray-900',
+        'text-gray-600',
+        'dark:text-gray-400',
+        'border-gray-200',
+        'dark:border-gray-800'
+      );
     }
   }
 
@@ -149,4 +187,3 @@ const allTags = [...new Set(posts.flatMap((post) => post.data.tags || []))].sort
     @apply ring-2 ring-blue-500/20 shadow-lg shadow-blue-500/10;
   }
 </style>
-
