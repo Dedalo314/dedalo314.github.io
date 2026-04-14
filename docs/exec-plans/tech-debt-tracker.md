@@ -4,4 +4,4 @@ List of known issues, areas for improvement, and planned refactorings.
 
 - [ ] Initial project scaffolding.
 - [ ] Configure LaTeX rendering.
-- [ ] Set up animation framework integration (e.g., React or vanilla JS).
+- [x] Set up animation framework integration (e.g., React or vanilla JS).

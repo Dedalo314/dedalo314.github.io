@@ -6,6 +6,8 @@ tags: ['Physics']
 authors: ['Álvaro Martín Cortinas']
 ---
 
+import RelativisticRocket from '../../components/RelativisticRocket';
+
 # From Algebra to the Stars: A Personal Journey Deriving the Relativistic Rocket Equation
 
 The dream of interstellar travel is the ultimate crucible for physics. While the **Tsiolkovsky equation** suffices for chemical rockets, as we approach the speed of light, Newtonian mechanics breaks down. In this post, I want to document my personal "learning path" in deriving the **Relativistic Rocket Equation**, including the frustrating dead ends and the differential equations that finally opened the door to hyperbolic spacetime.
@@ -108,7 +110,7 @@ $$
 - **At $\tau=0$:** $M = M_0$. No fuel spent.
 - **As $\tau \to \infty$:** $M \to 0$. To maintain $1g$ acceleration forever, the entire mass of the ship must eventually be converted into photons.
 
----
+<RelativisticRocket client:load />
 
 ## 5. The Engineering Reality: Headwinds and Radiation
 
