@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test('homepage should load and have correct title', async ({ page }) => {
   await page.goto('/');
-  await expect(page).toHaveTitle(/MathPhysicsAI | Frontiers of Thought/);
+  await expect(page).toHaveTitle(/Aletheia | Frontiers of Thought/);
   await expect(
     page.getByRole('link', { name: 'Explore the Blog' })
   ).toBeVisible();
@@ -15,7 +15,7 @@ test('homepage should load and have correct title', async ({ page }) => {
   );
 
   // Verify favicon logo is present in the header
-  const headerLogo = page.locator('header img[alt="MathPhysicsAI Logo"]');
+  const headerLogo = page.locator('header img[alt="Aletheia Logo"]');
   await expect(headerLogo).toBeVisible();
 
   // Verify favicon is present in the head
