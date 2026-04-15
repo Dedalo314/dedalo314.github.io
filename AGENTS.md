@@ -1,6 +1,6 @@
 # Agent Navigation Map
 
-Welcome. You are operating in an Astro-based codebase for a personal blog focusing on mathematics, physics, and artificial intelligence models/agents.
+Welcome. You are operating in an Astro-based codebase for Aletheia, a personal blog focusing on mathematics, physics, and artificial intelligence models/agents.
 
 **Do not guess architectural patterns.** We use progressive disclosure. Read the localized documentation based on your current task:
 

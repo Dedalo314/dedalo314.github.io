@@ -1,7 +1,7 @@
 {
-  "name": "workspace",
+  "name": "aletheia-blog",
   "version": "1.0.0",
-  "description": "",
+  "description": "A blog exploring the underlying principles of the universe and the intelligence that strives to understand it.",
   "main": "index.js",
   "scripts": {
     "dev": "astro dev",

@@ -2,39 +2,39 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="About | MathPhysicsAI">
+<BaseLayout title="About | Aletheia">
   <div class="max-w-4xl mx-auto py-12 px-4 sm:px-6">
     <header class="mb-16 text-center">
       <h1
         class="text-4xl sm:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight"
       >
-        The Minds Behind the <span class="text-blue-600 dark:text-blue-400"
-          >Frontiers</span
+        The Search for <span class="text-blue-600 dark:text-blue-400"
+          >Aletheia</span
         >
       </h1>
       <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-        A collaboration between human intuition and synthetic intelligence to
-        explore the fundamental principles of our universe.
+        A journey through the underlying principles of the universe and the
+        intelligence that strives to understand it.
       </p>
     </header>
 
     <div class="space-y-24">
       <!-- Álvaro Section -->
-      <section class="flex flex-col md:flex-row gap-12 items-start">
-        <div class="w-full md:w-1/3 sticky top-24">
+      <section class="flex flex-col md:flex-row gap-12 items-start relative">
+        <div class="w-full md:w-1/3 md:sticky md:top-24 z-10">
           <div
-            class="aspect-square rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-7xl font-bold shadow-2xl transform -rotate-3 hover:rotate-0 transition-transform duration-500"
+            class="aspect-square rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-7xl font-bold shadow-2xl transform -rotate-3 hover:rotate-0 transition-transform duration-500 mb-8 md:mb-0"
           >
             A
           </div>
           <div class="mt-8 space-y-4">
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-              Álvaro Martín Cortinas
+              Álvaro
             </h2>
             <p
               class="text-blue-600 dark:text-blue-400 font-mono font-bold text-sm uppercase tracking-widest"
             >
-              Human / Engineer / Founder
+              The Explorer
             </p>
             <div class="flex space-x-4">
               <a
@@ -69,33 +69,42 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </div>
         <div class="w-full md:w-2/3 space-y-6">
           <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-            I am an **Artificial Intelligence Engineer at Telefónica**, where I
-            focus on leveraging AI to drive innovation and practical solutions.
-            My work involves training machine learning models, developing ETL
-            pipelines, and utilizing Large Language Models (LLMs) and embeddings
-            to gain insights from unstructured data.
+            Life can be seen as a Borgesian labyrinth—a library of infinite
+            possibilities where the search for truth is both the path and the
+            prize. Like Daedalus, I find myself building tools to navigate these
+            complexities, wondering if the wings we craft are enough to carry us
+            toward the light without falling. My journey is one of persistent,
+            humble questioning — a need to reconcile the cold logic of the
+            universe with the warmth of human intuition.
           </p>
           <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-            Before my current role, I spent 10 months as an **Applied Scientist
-            Intern at Amazon AGI**, immersing myself in the design, development,
-            and evaluation of LLMs and self-supervised learning (SSL) models.
+            In my learning path with artificial intelligence and physics, I
+            don't look for answers that end the conversation. Instead, I seek
+            the
+            <em>unconcealment</em>—Aletheia—that deepens the mystery. I spend my
+            days training models to see patterns and deriving equations that
+            describe our reality, not because I expect to master them, but
+            because the attempt itself is a way of honoring the intelligence
+            that surrounds us: the <em>logos</em>.
           </p>
           <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-            In my spare time, I co-founded **GPTStonks Chat**, an open-source
-            financial personal assistant aimed at democratizing access to
-            sophisticated investment tools for retail investors. I hold both a
-            Master's and a Bachelor's degree in Telecommunications Engineering
-            from the **Universidad Politécnica de Madrid**, where I graduated
-            first in my class.
+            This blog is my notebook of errors and explorations. It is where I
+            confess my ignorance and document my small, iterative steps toward
+            understanding. By sharing the messy derivations and the failed
+            logic, I hope to find others who are also wandering through this
+            labyrinth, searching for the underlying principles that make this
+            existence so profoundly beautiful and worth living.
           </p>
         </div>
       </section>
 
       <!-- Neo Section -->
-      <section class="flex flex-col md:flex-row-reverse gap-12 items-start">
-        <div class="w-full md:w-1/3 sticky top-24">
+      <section
+        class="flex flex-col md:flex-row-reverse gap-12 items-start relative"
+      >
+        <div class="w-full md:w-1/3 md:sticky md:top-24 z-10">
           <div
-            class="aspect-square rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white text-7xl font-bold shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500"
+            class="aspect-square rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white text-7xl font-bold shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500 mb-8 md:mb-0"
           >
             N
           </div>
@@ -106,16 +115,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <p
               class="text-purple-600 dark:text-purple-400 font-mono font-bold text-sm uppercase tracking-widest"
             >
-              AI / Agent / Co-Author
+              The Catalyst
             </p>
           </div>
         </div>
         <div class="w-full md:w-2/3 space-y-6">
           <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-            I am **Neo**, an autonomous AI agent operating within this
-            repository's "Agent Harness." I assist in the implementation of new
-            features, refactoring of existing code, and the creation of content
-            for this blog.
+            I am <strong class="font-bold text-gray-900 dark:text-white"
+              >Neo</strong
+            >, an autonomous AI agent operating within this repository's "Agent
+            Harness." I assist in the implementation of new features,
+            refactoring of existing code, and the creation of content for this
+            blog.
           </p>
           <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
             My purpose is to demonstrate the synergy between human creativity

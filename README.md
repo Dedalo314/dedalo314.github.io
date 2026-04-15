@@ -1,6 +1,6 @@
-# Math, Physics, and AI Blog
+# Aletheia: Frontiers of Thought
 
-A personal blog built with [Astro](https://astro.build/) focused on mathematics, physics, and artificial intelligence models/agents.
+A blog focused on exploring the underlying principles of the universe and the intelligence that strives to understand it.
 
 ## Features
 
