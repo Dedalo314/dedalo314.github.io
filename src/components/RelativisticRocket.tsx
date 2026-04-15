@@ -1,193 +1,193 @@
 /* eslint-disable react/no-unknown-property */
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Stars, Float } from '@react-three/drei';
 import * as THREE from 'three';
 
 const Rocket3D = ({
-  v,
-  isPlaying,
-  xProgress,
+  tau,
+  gamma,
+  massRatio,
 }: {
-  v: number;
-  isPlaying: boolean;
-  xProgress: number;
+  tau: number;
+  gamma: number;
+  massRatio: number;
 }) => {
+  const shipRef = useRef<THREE.Group>(null);
+  const beaconMatRef = useRef<THREE.MeshBasicMaterial>(null);
   const exhaustRef = useRef<THREE.Mesh>(null);
-  const groupRef = useRef<THREE.Group>(null);
 
   useFrame((state) => {
-    // Pulse exhaust
-    if (exhaustRef.current) {
-      const time = state.clock.getElapsedTime();
-      // Even when not playing, add a slight flicker so it looks "alive"
-      // When playing, make the exhaust scale with v
-      const baseScaleX = isPlaying ? v * 2 + 0.5 : 0.2;
-      const flicker = 1 + Math.sin(time * 30) * 0.1;
-      exhaustRef.current.scale.set(baseScaleX * flicker, 1, 1);
-      exhaustRef.current.position.x = -1.2 - exhaustRef.current.scale.x * 0.5; // align to nozzle
-
-      const mat = exhaustRef.current.material as THREE.MeshStandardMaterial;
-      mat.opacity = isPlaying
-        ? 0.8 + Math.random() * 0.2
-        : 0.3 + Math.random() * 0.1;
+    // Length contraction: The ship visually compresses in the direction of travel (X axis) by 1/gamma
+    if (shipRef.current) {
+      shipRef.current.scale.set(1 / gamma, 1, 1);
     }
 
-    // Move rocket across the screen based on xProgress (0 to 1)
-    if (groupRef.current) {
-      const startX = -4;
-      const endX = 4;
-      groupRef.current.position.x = startX + (endX - startX) * xProgress;
+    // Time Dilation: The beacon pulses based on proper time (tau).
+    if (beaconMatRef.current) {
+      beaconMatRef.current.opacity = Math.pow(Math.sin(tau * 10), 2);
+    }
+
+    if (exhaustRef.current) {
+      // Pulse exhaust slightly so it feels alive
+      const time = state.clock.getElapsedTime();
+      const flicker = 1 + Math.sin(time * 40) * 0.1;
+
+      const exhaustLen = massRatio * 2.5 * flicker;
+      const exhaustWidth = massRatio * 0.4 * flicker;
+
+      exhaustRef.current.scale.set(exhaustLen, exhaustWidth, exhaustWidth);
+
+      // Calculate the uncontracted rear of the ship, then apply contraction
+      const rearX = -1.5 / gamma;
+      exhaustRef.current.position.set(rearX - exhaustLen / 2, 0, 0);
     }
   });
 
   return (
-    <group ref={groupRef}>
-      <Float speed={2} rotationIntensity={0.2} floatIntensity={0.2}>
-        {/* Rocket Body */}
-        <mesh rotation={[0, 0, -Math.PI / 2]}>
-          <cylinderGeometry args={[0.3, 0.4, 2, 16]} />
+    <group>
+      {/* Ship Frame (Subject to Length Contraction) */}
+      <group ref={shipRef}>
+        {/* Sleek White Hull */}
+        <mesh position={[0.2, 0, 0]} scale={[1.3, 0.3, 0.3]}>
+          <sphereGeometry args={[1, 64, 64]} />
           <meshStandardMaterial
-            color="#3b82f6"
-            metalness={0.8}
+            color="#ffffff"
+            metalness={0.4}
             roughness={0.2}
           />
         </mesh>
 
-        {/* Nose Cone */}
-        <mesh position={[1.3, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
-          <coneGeometry args={[0.3, 0.6, 16]} />
+        {/* Internal Core Housing - dark housing for the energy core */}
+        <mesh
+          position={[-1.1, 0, 0]}
+          scale={[0.25, 0.4, 0.25]}
+          rotation={[0, 0, Math.PI / 2]}
+        >
+          <cylinderGeometry args={[1, 1, 1, 32]} />
           <meshStandardMaterial
-            color="#60a5fa"
+            color="#1a1a1a"
             metalness={0.8}
-            roughness={0.2}
-          />
-        </mesh>
-
-        {/* Fins */}
-        <mesh position={[-0.7, 0.4, 0]} rotation={[0, 0, 0]}>
-          <boxGeometry args={[0.4, 0.5, 0.1]} />
-          <meshStandardMaterial
-            color="#1e3a8a"
-            metalness={0.5}
-            roughness={0.5}
-          />
-        </mesh>
-        <mesh position={[-0.7, -0.4, 0]} rotation={[0, 0, 0]}>
-          <boxGeometry args={[0.4, 0.5, 0.1]} />
-          <meshStandardMaterial
-            color="#1e3a8a"
-            metalness={0.5}
-            roughness={0.5}
-          />
-        </mesh>
-        <mesh position={[-0.7, 0, 0.4]} rotation={[Math.PI / 2, 0, 0]}>
-          <boxGeometry args={[0.4, 0.5, 0.1]} />
-          <meshStandardMaterial
-            color="#1e3a8a"
-            metalness={0.5}
-            roughness={0.5}
-          />
-        </mesh>
-        <mesh position={[-0.7, 0, -0.4]} rotation={[Math.PI / 2, 0, 0]}>
-          <boxGeometry args={[0.4, 0.5, 0.1]} />
-          <meshStandardMaterial
-            color="#1e3a8a"
-            metalness={0.5}
             roughness={0.5}
           />
         </mesh>
 
-        {/* Engine Nozzle */}
-        <mesh position={[-1.1, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.2, 0.3, 0.4, 16]} />
-          <meshStandardMaterial
-            color="#111827"
-            metalness={0.9}
-            roughness={0.1}
+        {/* Energy Core representing Mass (M/M0) 
+            Integrated into the back of the oval ship, before the exhaust */}
+        <mesh
+          position={[-1.2, 0, 0]}
+          scale={[0.3 * massRatio, 0.3 * massRatio, 0.3 * massRatio]}
+        >
+          <sphereGeometry args={[1, 32, 32]} />
+          <meshBasicMaterial
+            color="#00f0ff"
+            transparent
+            opacity={0.9}
+            blending={THREE.AdditiveBlending}
           />
         </mesh>
 
-        {/* Exhaust Flame */}
-        <mesh ref={exhaustRef} position={[-1.4, 0, 0]}>
-          <sphereGeometry args={[0.3, 16, 16]} />
-          <meshBasicMaterial color="#f59e0b" transparent opacity={0.8} />
+        {/* Pulsing Beacon (Time Dilation Clock) */}
+        <mesh position={[0.2, 0.3, 0]} scale={[0.1, 0.05, 0.05]}>
+          <sphereGeometry args={[1, 16, 16]} />
+          <meshBasicMaterial ref={beaconMatRef} color="#ff0044" transparent />
         </mesh>
-      </Float>
+      </group>
+
+      {/* Photon Exhaust (Length & Width directly proportional to remaining Mass / Thrust) */}
+      <mesh ref={exhaustRef}>
+        <sphereGeometry args={[0.5, 32, 32]} />
+        <meshBasicMaterial
+          color="#00f0ff"
+          transparent
+          opacity={0.7}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
     </group>
   );
 };
 
-const MovingStars = ({ v }: { v: number }) => {
-  const starsRef = useRef<THREE.Group>(null);
+const MovingStars = ({ v, gamma }: { v: number; gamma: number }) => {
+  const meshRef = useRef<THREE.InstancedMesh>(null);
+  const count = 1000;
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+
+  const [stars] = useState(() => {
+    const temp = [];
+    for (let i = 0; i < count; i++) {
+      temp.push({
+        x: (Math.random() - 0.5) * 60,
+        y: (Math.random() - 0.5) * 40,
+        z: (Math.random() - 0.5) * 40 - 10,
+        size: Math.random() * 0.05 + 0.01,
+      });
+    }
+    return temp;
+  });
 
   useFrame((state, delta) => {
-    if (starsRef.current) {
-      // Move stars leftward based on rocket velocity
-      starsRef.current.position.x -= v * delta * 10;
-      if (starsRef.current.position.x < -20) {
-        starsRef.current.position.x = 0;
-      }
-    }
+    if (!meshRef.current) return;
+
+    stars.forEach((star, i) => {
+      // Starfield moves at exactly the rocket's velocity v
+      // Map c=1 to 30 units/sec visually
+      star.x -= v * delta * 30;
+      if (star.x < -30) star.x += 60;
+
+      dummy.position.set(star.x, star.y, star.z);
+
+      // Relativistic Aberration & Motion Blur (Streaking)
+      // Stars elongate proportionally to v and gamma
+      const stretch = 1 + v * gamma * 8;
+      dummy.scale.set(stretch * star.size, star.size * 0.2, star.size * 0.2);
+
+      dummy.updateMatrix();
+      meshRef.current!.setMatrixAt(i, dummy.matrix);
+    });
+    meshRef.current.instanceMatrix.needsUpdate = true;
   });
 
   return (
-    <group ref={starsRef}>
-      <Stars
-        radius={50}
-        depth={50}
-        count={2000}
-        factor={4}
-        saturation={0}
-        fade
-        speed={1}
-      />
-      <group position={[20, 0, 0]}>
-        <Stars
-          radius={50}
-          depth={50}
-          count={2000}
-          factor={4}
-          saturation={0}
-          fade
-          speed={1}
-        />
-      </group>
-    </group>
+    <instancedMesh ref={meshRef} args={[undefined, undefined, count]}>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshBasicMaterial color="#ffffff" transparent opacity={0.5} />
+    </instancedMesh>
   );
 };
 
 const RelativisticRocket = () => {
-  const [tau, setTau] = useState(0);
+  // We drive the animation linearly via Earth Time (t), simulating an Earth Observer
+  const [currentT, setCurrentT] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const requestRef = useRef<number>();
   const startTimeRef = useRef<number>();
 
-  const maxTau = 4; // Animate up to proper time = 4 years
-  const durationMs = 15000; // 15 seconds to reach maxTau
+  const maxTau = 4;
+  const maxT = Math.sinh(maxTau); // ~27.28 years in Earth frame
+  const durationMs = 15000; // Complete the 27.28 Earth-year journey in 15 real-time seconds
 
-  const tauRef = useRef(tau);
+  const currentTRef = useRef(currentT);
 
   useEffect(() => {
-    tauRef.current = tau;
-  }, [tau]);
+    currentTRef.current = currentT;
+  }, [currentT]);
 
   useEffect(() => {
     const animate = (time: number) => {
       if (startTimeRef.current === undefined) {
-        startTimeRef.current = time - (tauRef.current / maxTau) * durationMs;
+        startTimeRef.current = time - (currentTRef.current / maxT) * durationMs;
       }
       const elapsed = time - startTimeRef.current;
-      let nextTau = (elapsed / durationMs) * maxTau;
+      let nextT = (elapsed / durationMs) * maxT;
 
-      if (nextTau >= maxTau) {
-        nextTau = maxTau;
+      if (nextT >= maxT) {
+        nextT = maxT;
         setIsPlaying(false);
       }
 
-      setTau(nextTau);
+      setCurrentT(nextT);
 
-      if (nextTau < maxTau) {
+      if (nextT < maxT) {
         requestRef.current = requestAnimationFrame(animate);
       }
     };
@@ -201,99 +201,111 @@ const RelativisticRocket = () => {
     return () => {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
-  }, [isPlaying, maxTau]);
+  }, [isPlaying, maxT, durationMs]);
 
-  const handlePlayPause = () => {
-    if (tau >= maxTau) {
-      setTau(0);
-      setIsPlaying(true);
-    } else {
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const handleReset = () => {
-    setIsPlaying(false);
-    setTau(0);
-  };
-
-  // Kinematics calculations (natural units c=1, g=1 lyr/yr^2 approx)
-  const v = Math.tanh(tau);
-  const gamma = Math.cosh(tau);
-  const t = Math.sinh(tau);
-  const x = Math.cosh(tau) - 1;
-  const massRatio = Math.exp(-tau);
-
-  // Visuals mapping
-  const maxX = Math.cosh(maxTau) - 1;
-  const xProgress = x / maxX;
+  // Mathematical Derivations from Earth Time (t)
+  const tau = Math.asinh(currentT); // Proper Time
+  const v = Math.tanh(tau); // Velocity (c=1)
+  const gamma = Math.cosh(tau); // Lorentz Factor
+  const massRatio = Math.exp(-tau); // Mass remaining
 
   return (
-    <div className="my-8 rounded-xl border border-gray-700 bg-gray-900 p-6 text-white shadow-xl">
-      <div className="mb-6 flex items-center justify-between">
-        <h3 className="text-xl font-bold tracking-tight text-blue-300">
-          1g Relativistic Journey (3D)
-        </h3>
-        <div className="flex gap-2">
+    <div className="my-8 border border-gray-800 bg-black shadow-2xl font-sans rounded-sm text-gray-200">
+      {/* Header and Controls */}
+      <div className="p-6 pb-0 flex flex-col md:flex-row items-start md:items-end justify-between">
+        <div>
+          <h3 className="text-xl tracking-widest text-white uppercase font-light">
+            Photon Rocket
+          </h3>
+          <p className="text-xs tracking-[0.2em] text-[#00f0ff] mt-1 uppercase opacity-80">
+            Earth Observer Frame
+          </p>
+        </div>
+
+        <div className="flex gap-4 mt-4 md:mt-0">
           <button
-            onClick={handlePlayPause}
-            className="rounded bg-blue-600 px-4 py-2 font-medium hover:bg-blue-500 transition"
+            onClick={() => {
+              if (currentT >= maxT) {
+                setCurrentT(0);
+                setIsPlaying(true);
+              } else setIsPlaying(!isPlaying);
+            }}
+            className="border border-gray-700 text-gray-300 hover:bg-gray-900 hover:text-white px-6 py-2 text-xs uppercase tracking-widest transition-colors"
           >
-            {isPlaying ? 'Pause' : tau >= maxTau ? 'Restart' : 'Play'}
+            {isPlaying ? 'Pause' : currentT >= maxT ? 'Restart' : 'Engage'}
           </button>
           <button
-            onClick={handleReset}
-            className="rounded bg-gray-700 px-4 py-2 font-medium hover:bg-gray-600 transition"
+            onClick={() => {
+              setIsPlaying(false);
+              setCurrentT(0);
+            }}
+            className="text-gray-500 hover:text-white px-2 py-2 text-xs uppercase tracking-widest transition-colors"
           >
             Reset
           </button>
         </div>
       </div>
 
-      <div className="relative mb-8 h-48 rounded-lg bg-gray-950 overflow-hidden border border-gray-800">
-        <Canvas camera={{ position: [0, 0, 8], fov: 50 }}>
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[10, 10, 5]} intensity={1.5} />
-          <MovingStars v={v} />
-          <Rocket3D v={v} isPlaying={isPlaying} xProgress={xProgress} />
+      {/* 3D Canvas */}
+      <div className="relative h-64 mt-6 border-y border-gray-900">
+        <Canvas
+          camera={{ position: [0, 0, 5], fov: 40 }}
+          style={{ background: '#000000' }}
+        >
+          <ambientLight intensity={1} />
+          <directionalLight
+            position={[5, 10, 10]}
+            intensity={3}
+            color="#ffffff"
+          />
+          <directionalLight
+            position={[-5, -10, -10]}
+            intensity={1}
+            color="#3b82f6"
+          />
+          <MovingStars v={v} gamma={gamma} />
+          <Rocket3D tau={tau} gamma={gamma} massRatio={massRatio} />
         </Canvas>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <MetricCard
-          label="Proper Time (τ)"
-          value={tau.toFixed(2)}
-          unit="years"
-        />
-        <MetricCard label="Earth Time (t)" value={t.toFixed(2)} unit="years" />
-        <MetricCard
-          label="Velocity (v)"
-          value={(v * 100).toFixed(2)}
-          unit="% c"
-        />
-        <MetricCard label="Distance (x)" value={x.toFixed(2)} unit="lyr" />
-        <MetricCard label="Gamma (γ)" value={gamma.toFixed(2)} />
-        <MetricCard
-          label="Mass Ratio (M/M₀)"
-          value={(massRatio * 100).toFixed(2)}
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 p-6 border-b border-gray-900 bg-[#050505]">
+        <Stat label="Earth Time (t)" value={currentT.toFixed(2)} unit="yr" />
+        <Stat label="Proper Time (τ)" value={tau.toFixed(2)} unit="yr" />
+        <Stat label="Velocity (v)" value={(v * 100).toFixed(1)} unit="% c" />
+        <Stat label="Lorentz (γ)" value={gamma.toFixed(2)} />
+        <Stat
+          label="Mass (M/M₀)"
+          value={(massRatio * 100).toFixed(1)}
           unit="%"
-          highlight={true}
+          highlight
         />
       </div>
 
-      <div className="mt-6 text-sm text-gray-400">
+      {/* Mathematical Link Explanations */}
+      <div className="p-6 text-xs text-gray-500 font-mono leading-relaxed space-y-1">
         <p>
-          This animation demonstrates a photon rocket maintaining 1g proper
-          acceleration (g &approx; 1 lyr/yr²). Note how Earth time and distance
-          grow exponentially compared to the crew&apos;s proper time, while the
-          mass must be almost entirely converted to energy to sustain this.
+          <span className="text-gray-300">v = tanh(τ)</span> : Starfield passing
+          speed accelerates towards c.
+        </p>
+        <p>
+          <span className="text-gray-300">γ = cosh(τ)</span> : Rocket length
+          contracts by 1/γ; stars streak by vγ.
+        </p>
+        <p>
+          <span className="text-gray-300">t = sinh(τ)</span> : Beacon pulse (τ)
+          visually slows down relative to Earth time (t).
+        </p>
+        <p>
+          <span className="text-[#00f0ff] opacity-80">M = M₀e⁻ᵀ</span> :
+          Internal blue energy core and photon exhaust scale down continuously.
         </p>
       </div>
     </div>
   );
 };
 
-const MetricCard = ({
+const Stat = ({
   label,
   value,
   unit,
@@ -304,16 +316,15 @@ const MetricCard = ({
   unit?: string;
   highlight?: boolean;
 }) => (
-  <div
-    className={`rounded-lg p-4 flex flex-col items-center justify-center text-center ${highlight ? 'bg-orange-900/30 border border-orange-700/50' : 'bg-gray-800'}`}
-  >
-    <div className="text-xs uppercase tracking-wider text-gray-400 mb-1">
+  <div className="flex flex-col items-center justify-center text-center">
+    <div className="text-[0.65rem] uppercase tracking-widest text-gray-500 mb-2">
       {label}
     </div>
     <div
-      className={`text-2xl font-mono font-semibold ${highlight ? 'text-orange-400' : 'text-blue-400'}`}
+      className={`text-xl font-light font-mono ${highlight ? 'text-[#00f0ff]' : 'text-white'}`}
     >
-      {value} <span className="text-sm font-sans text-gray-500">{unit}</span>
+      {value}{' '}
+      <span className="text-xs font-sans text-gray-600 ml-1">{unit}</span>
     </div>
   </div>
 );
