@@ -6,7 +6,11 @@ interface Props {
   defaultOpen?: boolean;
 }
 
-export default function Collapsible({ title, children, defaultOpen = false }: Props) {
+export default function Collapsible({
+  title,
+  children,
+  defaultOpen = false,
+}: Props) {
   return (
     <details
       className="my-4 rounded-lg border border-gray-200 bg-gray-50 p-4 transition-all dark:border-gray-700 dark:bg-gray-800"

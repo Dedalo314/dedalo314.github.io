@@ -10,12 +10,16 @@ function LabInner() {
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
     const omega = 0.5; // Orbital angular velocity
-    
+
     // Lab orbits: position moves along circle
     if (orbitGroupRef.current) {
-      orbitGroupRef.current.position.set(2.9 * Math.cos(omega * t), 2.9 * Math.sin(omega * t), 0);
+      orbitGroupRef.current.position.set(
+        2.9 * Math.cos(omega * t),
+        2.9 * Math.sin(omega * t),
+        0
+      );
     }
-    
+
     // Primed axes rotate to maintain x' radially outward
     if (primedAxesRef.current) {
       primedAxesRef.current.rotation.z = omega * t;
@@ -26,7 +30,7 @@ function LabInner() {
     <>
       <ambientLight intensity={1.5} />
       <directionalLight position={[10, 10, 5]} intensity={2} />
-      
+
       {/* Earth */}
       <mesh>
         <sphereGeometry args={[1.0, 32, 32]} />
@@ -36,7 +40,12 @@ function LabInner() {
       {/* Orbit path */}
       <mesh rotation={[Math.PI / 2, 0, 0]}>
         <ringGeometry args={[2.8, 3.0, 64]} />
-        <meshBasicMaterial color="#ffffff" side={THREE.DoubleSide} opacity={0.2} transparent />
+        <meshBasicMaterial
+          color="#ffffff"
+          side={THREE.DoubleSide}
+          opacity={0.2}
+          transparent
+        />
       </mesh>
 
       {/* Orbiting Lab Group */}

@@ -1,20 +1,25 @@
 import { test, expect } from '@playwright/test';
 
-test('cartan-newton-orbiting-lab post loads and has no console errors', async ({ page }) => {
+test('cartan-newton-orbiting-lab post loads and has no console errors', async ({
+  page,
+}) => {
   const consoleErrors: string[] = [];
   const pageErrors: Error[] = [];
-  page.on('console', msg => {
-    if (msg.type() === 'error' && !msg.text().includes('ERR_TUNNEL_CONNECTION_FAILED')) {
+  page.on('console', (msg) => {
+    if (
+      msg.type() === 'error' &&
+      !msg.text().includes('ERR_TUNNEL_CONNECTION_FAILED')
+    ) {
       consoleErrors.push(msg.text());
     }
   });
-  page.on('pageerror', err => {
+  page.on('pageerror', (err) => {
     pageErrors.push(err);
   });
 
   await page.goto('/blog/cartan-newton-orbiting-lab');
   await expect(page).toHaveTitle(/The Orbiting Lab/);
-  
+
   await page.waitForTimeout(2000);
 
   console.log('--- CONSOLE ERRORS ---', consoleErrors);
