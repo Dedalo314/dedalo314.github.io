@@ -80,7 +80,7 @@ const GeodesicDeviation = () => {
       <div className="p-4 bg-gray-900 flex justify-between items-center border-b border-gray-800">
         <div>
           <h3 className="text-sm font-semibold text-white">Orbital Mechanics: Clohessy-Wiltshire Simulation</h3>
-          <p className="text-[10px] text-gray-400">Red: Object | White: Lab Center | Gray: Analytical Trajectory</p>
+          <p className="text-[10px] text-gray-400">Red: Object &bull; White: Lab Center &bull; Gray: Analytical Trajectory</p>
         </div>
         <div className="text-[10px] bg-black px-2 py-1 rounded text-green-400 font-mono">ω = {omega.toFixed(1)} rad/s</div>
       </div>
@@ -97,13 +97,15 @@ const GeodesicDeviation = () => {
         </div>
         
         <Canvas camera={{ position: [0, -1, 4] }}>
+          <ambientLight intensity={1} />
           <OrbitingLab omega={omega} isPlaying={isPlaying} reset={reset} setTime={setTime} />
         </Canvas>
       </div>
       
       <div className="p-4 flex gap-4 items-center bg-gray-900 border-t border-gray-800">
-        <label className="text-xs text-gray-300 font-mono">Speed (ω):</label>
+        <label htmlFor="speed-range" className="text-xs text-gray-300 font-mono">Speed (ω):</label>
         <input 
+          id="speed-range"
           type="range" 
           min="0.5" 
           max="3" 

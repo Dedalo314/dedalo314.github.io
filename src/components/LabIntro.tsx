@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useRef, useState, useEffect } from 'react';
@@ -42,15 +43,15 @@ function LabInner() {
       <group ref={orbitGroupRef}>
         <group ref={primedAxesRef}>
           {/* Lab Body */}
-          <mesh position={[0, 0, 0]}>
+          <mesh>
             <boxGeometry args={[0.5, 0.5, 0.5]} />
             <meshStandardMaterial color="#00f0ff" />
           </mesh>
 
           {/* Axes Visualization */}
-          <group position={[0, 0, 0]}>
+          <group>
             {/* x' axis (Radial, Red) */}
-            <mesh position={[0.6, 0, 0]} rotation={[0, 0, 0]}>
+            <mesh position={[0.6, 0, 0]}>
               <cylinderGeometry args={[0.04, 0.04, 0.8]} />
               <meshBasicMaterial color="red" />
             </mesh>
@@ -74,8 +75,8 @@ export default function LabIntroContainer() {
     <div className="relative h-96">
       <div className="absolute top-2 left-2 bg-gray-900/80 p-2 rounded text-[10px] text-white z-10">
         <p>Blue: Earth | Cyan: Lab</p>
-        <p className="text-red-400">Red: x' (Radial)</p>
-        <p className="text-green-400">Green: y' (Tangential)</p>
+        <p className="text-red-400">Red: x&apos; (Radial)</p>
+        <p className="text-green-400">Green: y&apos; (Tangential)</p>
       </div>
       <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
         <LabInner />
