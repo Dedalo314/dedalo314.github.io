@@ -27,8 +27,11 @@ test('blog index lists posts with modern cards', async ({ page }) => {
   await page.goto('/blog');
   await expect(page.getByText('Insights from the Frontiers')).toBeVisible();
 
+  // Ensure we are in English to see English posts
+  await page.click('#lang-toggle-en');
+
   // Check for the new article card structure
-  const firstArticle = page.locator('article').first();
+  const firstArticle = page.locator('article:visible').first();
   await expect(firstArticle).toHaveClass(/bg-gray-900/);
   await expect(firstArticle.locator('h2')).toBeVisible();
   await expect(firstArticle.getByText('Read Article')).toBeVisible();
