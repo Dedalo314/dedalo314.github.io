@@ -1,0 +1,233 @@
+---
+title: 'El Laboratorio en Órbita: Derivando Fuerzas Ficticias a partir de la Desviación Geodésica'
+description: 'Explorando cómo la geometría diferencial y la desviación geodésica derivan naturalmente fuerzas ficticias como la de Coriolis y la centrífuga en un laboratorio en órbita giratoria.'
+pubDate: '2026-06-28'
+tags: ['Física', 'Geometría Diferencial', 'Mecánica Orbital']
+authors: ['Álvaro Martín Cortinas']
+repoLink: 'https://github.com/Dedalo314/dedalo314.github.io'
+lang: 'es'
+originalSlug: 'cartan-newton-orbiting-lab'
+---
+
+import { Canvas } from '@react-three/fiber';
+import LabIntro from '../../components/LabIntro.tsx';
+import GeodesicDeviation from '../../components/GeodesicDeviation.tsx';
+import Collapsible from '../../components/Collapsible.tsx';
+
+<div className="h-96" style={{ height: '384px' }}>
+  <LabIntro client:only="react" />
+</div>
+
+Imagina a un astronauta flotando libremente dentro de un laboratorio en órbita, como la Estación Espacial Internacional. Desde un punto de vista puramente newtoniano, tanto la estación como el astronauta están cayendo juntos, creando una sensación de ingravidez. Pero, ¿qué pasa si el laboratorio está rotando para mantener un lado mirando hacia la Tierra de modo que puedan dormir con las vistas? ¿Cómo describimos las fuerzas sutiles y aparentemente invisibles que experimenta el astronauta a medida que se aleja del centro del laboratorio?
+
+En lugar de confiar en la cinemática newtoniana estándar de sistemas rotatorios, que a menudo es farragosa, podemos usar el elegante lenguaje de la geometría diferencial. Al tratar el centro de masa del laboratorio y al astronauta como dos partículas cercanas que se mueven a lo largo de sus respectivas líneas de universo, su movimiento relativo queda perfectamente descrito por la **Ecuación de Desviación Geodésica**:
+
+$$\frac{D^2 n^\alpha}{d\lambda^2} + R^\alpha_{\beta\gamma\delta} \frac{dx^\beta}{d\lambda} n^\gamma \frac{dx^\delta}{d\lambda} = 0$$
+
+En este artículo, desglosaremos esta ecuación paso a paso. Veremos cómo la maquinaria matemática de las derivadas covariantes (los coeficientes de conexión) y la curvatura del espacio-tiempo (el tensor de Riemann) escupen naturalmente las conocidas fuerzas ficticias —Coriolis y Centrífuga— sin que tengamos que añadirlas a mano. Luego, visualizaremos la sorprendente mecánica orbital que surge de estas ecuaciones.
+
+---
+
+## 1. La Configuración: Sistemas Inerciales vs. Rotatorios
+
+Para entender el movimiento relativo, debemos definir dos sistemas de coordenadas:
+
+- $(x, y, z)$: El sistema estrictamente inercial (centrado en la Tierra).
+- $(x', y', z')$: El sistema rotatorio (centrado en el laboratorio), donde el eje $x'$ siempre apunta radialmente alejándose de la Tierra.
+
+La transformación de coordenadas entre el sistema inercial centrado en la Tierra $\mathbf{x}$ y el sistema rotatorio centrado en el laboratorio $\mathbf{x}'$ se define mediante una traslación $\mathbf{R}(t)$ y una rotación $\mathbf{A}(t)$:
+
+$$\mathbf{x} = \mathbf{R}(t) + \mathbf{A}(t) \mathbf{x}'$$
+
+Donde:
+
+- $\mathbf{R}(t) = \begin{pmatrix} R \cos(\omega t) \\ R \sin(\omega t) \\ 0 \end{pmatrix}$ sigue la órbita del laboratorio.
+- $\mathbf{A}(t) = \begin{pmatrix} \cos(\omega t) & -\sin(\omega t) & 0 \\ \sin(\omega t) & \cos(\omega t) & 0 \\ 0 & 0 & 1 \end{pmatrix}$ rota los ejes locales a la velocidad angular orbital $\omega$.
+
+En notación de índices, esto se escribe limpiamente como:
+
+$$x^i = R^i(t) + A^i_{\ j'}(t) x^{j'}$$.
+
+---
+
+## 2. Derivando los Coeficientes de Conexión ($\Gamma$)
+
+Debido a que nuestro sistema local $(x', y', z')$ está rotando, es un sistema no inercial. En geometría diferencial, los sistemas no inerciales se manifiestan como coeficientes de conexión no nulos (símbolos de Christoffel, $\Gamma$).
+
+Al pasar del sistema plano e inercial (donde $\Gamma = 0$) a nuestro sistema rotatorio, debemos usar la regla de transformación para las conexiones:
+
+$$\Gamma^{i'}_{j'k'} = \langle \sigma^{i'}, \nabla_{k'}\mathbf{e}_{j'} \rangle = \frac{\partial x^{i'}}{\partial x^\alpha} \frac{\partial^2 x^\alpha}{\partial x^{j'} \partial x^{k'}}$$
+
+donde $\mathbf{\sigma}^{i'}$ es la forma dual de la base de coordenadas $\mathbf{e}_{j'}$: $\langle \mathbf{\sigma}^{i'}, \mathbf{e}_{j'} \rangle = \delta^{i'}_{j'}$.
+
+Dado que en el espacio-tiempo de Cartan-Newton el tiempo es universal ($t = x^{0'}$) y cada rebanada espacial es plana, las derivadas espaciales desaparecen, dejando solo las componentes mixtas espacio-tiempo $\Gamma^{i'}_{j'0'}$ y la componente temporal $\Gamma^{i'}_{0'0'}$ como no nulas. Aplicando la matriz de rotación inversa y diferenciando $\mathbf{A}(t)$ con respecto al tiempo, la multiplicación de matrices $\mathbf{A}^{-1} \dot{\mathbf{A}}$ produce la matriz de velocidad angular antisimétrica.
+
+Entonces, para una rotación alrededor del eje z, el cálculo da exactamente:
+
+$$\Gamma^{1'}_{2'0'} = -\omega, \quad \Gamma^{2'}_{1'0'} = \omega,  \quad \Gamma^{i'}_{0'0'} = 0$$.
+
+Estos coeficientes son la huella geométrica de la rotación.
+
+---
+
+## 3. La Primera Derivada Covariante: Velocidad Relativa
+
+Ahora, miremos al astronauta. Definimos un vector de desviación $n^{\alpha'}$ que apunta desde el centro del laboratorio hacia el astronauta. Como el tiempo es universal y $t = \lambda$, $n^{0'} = \left(\frac{\partial t}{\partial n^{0'}}\right)_\lambda = 0$, dejando solo la distancia espacial $n^{i'}$.
+
+El laboratorio está en reposo en su propio sistema, moviéndose puramente a través del tiempo, por lo que su cuadrivelocidad es $u^{\mu'} = \frac{dx^{\mu'}}{dt} = (1, 0, 0, 0)$.
+
+Para encontrar la velocidad relativa geométrica, tomamos la derivada covariante del vector de desviación a lo largo de la línea de universo del laboratorio ($\lambda = t$):
+
+$$\frac{Dn^{i'}}{dt} = \frac{dn^{i'}}{dt} + \Gamma^{i'}_{\beta'\mu'} n^{\beta'} \frac{dx^{\mu'}}{dt}$$
+
+Dado que $\mu' = 0'$ y $\beta' = j'$, esto se simplifica instantáneamente a:
+
+$$\frac{Dn^{i'}}{dt} = \frac{dn^{i'}}{dt} + \Gamma^{i'}_{j'0'} n^{j'}$$.
+
+Físicamente, ¡vemos que el ser un sistema no inercial impacta en la velocidad percibida! La velocidad geométrica "verdadera" es la velocidad aparente vista por el astronauta ($\frac{dn^{i'}}{dt}$) _más_ un término de arrastre rotacional ($\Gamma^{i'}_{j'0'} n^{j'}$), que mapea perfectamente a la adición clásica de velocidades $\vec{\omega} \times \vec{n}$.
+
+---
+
+## 4. La Segunda Derivada Covariante: Surgimiento de Coriolis
+
+Para obtener la aceleración, tomamos la derivada covariante por segunda vez:
+
+$$\frac{D^2 n^{i'}}{dt^2} = \frac{d}{dt} \left( \frac{Dn^{i'}}{dt} \right) + \Gamma^{i'}_{\beta'\mu'} \frac{Dn^{\beta'}}{dt} \frac{dx^{\mu'}}{dt}$$
+
+Expandiendo esto mediante la regla del producto y sustituyendo nuestros valores de $\Gamma$ conocidos:
+
+$$\frac{D^2 n^{i'}}{dt^2} = \frac{d^2 n^{i'}}{dt^2} + 2\omega \left[ \delta^{2'}_{i'} \frac{dn^{1'}}{dt} - \delta^{1'}_{i'} \frac{dn^{2'}}{dt} \right] - \omega^2\left[n^{1'}\delta^{1'}_{i'} + n^{2'}\delta^{2'}_{i'}\right]$$
+
+Ahora, ¡mira de cerca los términos generados por esta expansión geométrica!
+
+El término multiplicado por $2\omega$ contiene componentes de velocidad alternantes $\frac{dn^{i'}}{dt}$, que es el equivalente exacto en notación de índices de la **aceleración de Coriolis clásica**, $2\vec{\omega} \times \dot{\vec{n}}$. Mientras tanto, el término multiplicado por $\omega^2$ escala directamente con la distancia $n$ desde el origen, representando **la aceleración centrífuga cinemática**, $-\vec{\omega} \times (\vec{\omega} \times \vec{n})$.
+
+¡Sin tener que pegar manualmente correcciones newtonianas, la maquinaria de la segunda derivada covariante ha derivado naturalmente **tanto la aceleración de Coriolis como la Centrífuga puramente a partir del giro geométrico de nuestro sistema de coordenadas rotatorio**!
+
+---
+
+## 5. Obteniendo el Término de Curvatura ($R'$): Gravedad de Marea
+
+La segunda mitad de la Ecuación de Desviación Geodésica depende del **tensor de curvatura de Riemann**. Describe la gravedad de marea real de la Tierra. En Newton-Cartan, todos los $R^{\alpha}_{\beta\gamma\delta}$ desaparecen excepto $R^{j}_{0k0} = - R^{j}_{00k} = \frac{\partial^2 \phi}{\partial x^j \partial x^k}$.
+
+Para encontrar $R^{i'}_{0'j'0'}$ en nuestro laboratorio rotatorio, podemos hacer uso de la ecuación geométrica y abstracta para $\mathbf{Riemann(...)}$. $\mathbf{Riemann(...)}$ es un objeto geométrico, por lo que tiene significado físico independientemente de nuestro sistema de coordenadas, y la ecuación abstracta será válida incluso en nuestro laboratorio rotatorio no inercial. ¡Averigüemos la ecuación geométrica en el sistema inercial de la Tierra y luego traduzcamos la ecuación a nuestras coordenadas en el sistema del laboratorio!
+
+De Newton sabemos que (constantes normalizadas para que $G = 1$):
+
+$$\phi = \frac{-GM}{r} = - \frac{M}{r}$$.
+
+Y tomando cuidadosamente las derivadas $\partial_i \partial_j \phi$:
+
+$$R^{j}_{0k0} = - R^{j}_{00k} = \frac{M}{r^3}\left[ \delta^{j}_{k} - 3\frac{x^k x^j}{r^2} \right]$$,
+
+donde $r = \left( \sum_i x^i x^i \right)^{1/2}$.
+
+Ahora, podemos inferir la ecuación abstracta del espacio-tiempo que conduce a la ecuación de coordenadas promocionando a tensores:
+
+$$\mathbf{R} = \frac{M}{r^3}\left( \mathbf{P} - 3 \mathbf{\hat{r}}\otimes \mathbf{\hat{r}} \right)\mathbf{d}t\mathbf{d}t$$,
+
+donde $\mathbf{\hat{r}} = \mathbf{x}_{centro lab} / r$ es un vector unitario que apunta radialmente hacia afuera desde la fuente y $\mathbf{P}$ es la matriz de proyección espacial (matriz diagonal, identidad en el espacio y 0 en el tiempo).
+
+Nuevamente, como esta es una ecuación de espacio-tiempo en notación geométrica y abstracta, ¡debe funcionar también en las coordenadas del laboratorio $x^{\alpha'}$! Y como $x^{1'}$ siempre apunta hacia afuera radialmente debido a la rotación del laboratorio, $\mathbf{\hat{r}'} = \left(0,1,0,0 \right)$ (fácil, ¿verdad?). Entonces obtenemos:
+
+$$R^{j'}_{0'k'0'} = - R^{j'}_{0'0'k'} = \frac{M}{r^3}\begin{pmatrix} -2 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix} = \omega^2\begin{pmatrix} -2 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix}$$,
+
+y $R^{\alpha'}_{\beta'\gamma'\delta'} = 0$ para el resto de coordenadas (coherente con la geometría de Cartan-Newton).
+
+Finalmente, el término para la Ecuación de Desviación Geodésica resulta en:
+
+$$R^{i'}_{0'j'0'} n^{j'} = \omega^2 \left[-2 n^{1'}\delta^{i'}_{1'} + n^{2'} \delta^{i'}_{2'} + n^{3'} \delta^{i'}_{3'} \right]$$.
+
+Esta expresión, proporcional a $\omega^2$ y a la posición de desviación $\mathbf{n}'$, representa las verdaderas fuerzas de marea gravitatorias de la Tierra. En lugar de un artefacto ficticio de la rotación, este término de curvatura captura el estiramiento y apretón físico real —el gradiente de gravedad— causado por el hecho de que el astronauta está en un punto ligeramente diferente en el pozo de gravedad de la Tierra que el centro de masa del laboratorio.
+
+---
+
+## 6. Las Ecuaciones de Movimiento de la Desviación Geodésica
+
+Poniéndolo todo junto, la ecuación de desviación geodésica, cuando se proyecta sobre nuestro sistema local rotatorio, produce el siguiente sistema acoplado de ecuaciones diferenciales de segundo orden:
+
+$$\frac{d^2 n^{1'}}{dt^2} - 2\omega \frac{dn^{2'}}{dt} - 3\omega^2 n^{1'} = 0$$,
+
+$$\frac{d^2 n^{2'}}{dt^2} + 2\omega \frac{dn^{1'}}{dt}= 0$$,
+
+$$\frac{d^2 n^{3'}}{dt^2} + \omega^2 n^{3'} = 0$$.
+
+Estas son las ecuaciones que gobiernan el movimiento del astronauta en relación con el centro de masa del laboratorio, si se le da un ligero empujón (localmente). En mecánica orbital, estas se conocen famosamente como las ecuaciones de **Clohessy-Wiltshire** (o de Hill).
+
+---
+
+## 7. El Efecto Boomerang: Probando la Oscilación
+
+Si lanzas un objeto (o al astronauta) puramente radialmente hacia afuera (dirección $+x'$), podrías esperar que flote alejándose para siempre. En cambio, el objeto hace un bucle hacia atrás y finalmente regresa exactamente a tu mano. Podemos probar esto matemáticamente.
+
+Supongamos las condiciones iniciales: $x'(0) = 0$, $y'(0) = 0$, $\dot{x'}(0) = v_0$ y $\dot{y'}(0) = 0$. Como $\mathbf{n'}$ es el vector de separación desde el centro del laboratorio (geodésica fiduciaria), espacialmente es lo mismo que la posición del objeto en coordenadas $x^{i'}$ (no en la dimensión temporal, 0 vs t respectivamente, ¡pero en Cartan-Newton la dimensión temporal se ha cancelado!).
+
+Si integramos la segunda ecuación una vez, obtenemos:
+$$\dot{y'} = -2\omega x'$$.
+
+Sustituye esto de nuevo en la primera ecuación:
+
+$$\ddot{x'} = 2\omega(-2\omega x') + 3\omega^2 x' \Rightarrow \ddot{x'} = -4\omega^2 x' + 3\omega^2 x' \Rightarrow \ddot{x'} + \omega^2 x' = 0$$.
+
+Las fuerzas ficticias colapsan perfectamente en un **oscilador armónico simple** con frecuencia $\omega$. Resolver este sistema produce una elipse cerrada y periódica:
+
+$$x'(t) = \frac{v_0}{\omega}\sin(\omega t)$$
+
+$$y'(t) = \frac{2v_0}{\omega}(\cos(\omega t) - 1)$$.
+
+Y a partir de la tercera ecuación, es trivial que $z'(t) = 0$. Como era de esperar, el objeto permanece en el plano X'Y'.
+
+Finalmente, observa que cuando el reloj marca un período orbital ($t = \frac{2\pi}{\omega}$), $\sin(2\pi) = 0$ y $\cos(2\pi) = 1$. ¡El objeto regresa exactamente a $(0,0)$!.
+
+### La Perspectiva Inercial
+
+¿Por qué sucede esto? En el sistema inercial centrado en la Tierra, tu lanzamiento hacia afuera no cambia la velocidad tangencial del objeto, sino que lo empuja a una **órbita ligeramente elíptica**. Debido a que la energía de una órbita depende casi por completo de su velocidad tangencial, esta nueva órbita elíptica tiene el _exacto mismo período orbital_ que la órbita circular del laboratorio. ¡Dos órbitas que se cruzan con el mismo período están garantizadas a encontrarse de nuevo después de una rotación completa!
+
+### La Perspectiva Rotatoria
+
+Dentro del laboratorio, la deriva hacia afuera ($+x$) desencadena una implacable fuerza de Coriolis ($2\omega v_y$ y $-2\omega v_x$). Esto actúa como un campo magnético, doblando constantemente la trayectoria del objeto hacia la derecha (dirección $-y$), deteniendo su progreso hacia afuera y lanzándolo de regreso hacia el centro.
+
+---
+
+## 8. Visualizando la Desviación Geodésica
+
+<GeodesicDeviation client:only="react" />
+
+---
+
+## 9. Resolviendo con SymPy
+
+<Collapsible title="Mostrar Código SymPy">
+
+```python
+import sympy as sp
+
+t = sp.symbols('t')
+n1 = sp.Function('n1')(t)
+n2 = sp.Function('n2')(t)
+n3 = sp.Function('n3')(t)
+omega = sp.symbols('omega', real=True)
+
+# ẍ = 2ωẏ + 3ω²x
+# ÿ = -2ωẋ
+# ẑ = -ω²z
+
+eq1 = sp.Eq(n1.diff(t, 2), 2 * omega * n2.diff(t) + 3 * omega**2 * n1)
+eq2 = sp.Eq(n2.diff(t, 2), -2 * omega * n1.diff(t))
+eq3 = sp.Eq(n3.diff(t, 2), -omega**2 * n3)
+
+sol = sp.dsolve((eq1, eq2, eq3))
+print(sp.latex(sol))
+```
+
+</Collapsible>
+
+La solución analítica, obtenida vía SymPy, es:
+
+$$\begin{cases} n^{1'}(t) = -\frac{2 C_1}{3 \omega} + \frac{C_2 \sin(\omega t)}{2 \omega} - \frac{C_3 \cos(\omega t)}{2 \omega} \\ n^{2'}(t) = C_1 t + \frac{C_2 \cos(\omega t)}{\omega} + \frac{C_3 \sin(\omega t)}{\omega} + C_4 \\ n^{3'}(t) = \frac{C_5 \sin(\omega t)}{\omega} + \frac{C_6 \cos(\omega t)}{\omega} \end{cases}$$
+
+Esta solución muestra que el movimiento en el plano $n^{1'}n^{2'}$ (radial y tangencial) está acoplado y conduce a una deriva (el término $C_1 t$), mientras que el movimiento en la dirección $n^{3'}$ (vertical) es un oscilador armónico simple.
+
+## Conclusión
+
+Lo que demuestra bellamente el ejercicio del "Laboratorio en Órbita" es que las fuerzas ficticias no son correcciones ad-hoc que debemos pegar a las leyes de Newton. Simplemente transformando nuestras coordenadas y exigiendo que la geometría siga siendo consistente, la maquinaria de las derivadas covariantes y el tensor de Riemann genera automáticamente los efectos de Coriolis y Centrífuga.

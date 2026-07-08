@@ -1,0 +1,19 @@
+---
+
+---
+
+<div class="inline-flex items-center space-x-2">
+  <a
+    href={Astro.url.pathname.replace(/\/es\//, '/').replace(/^\/es$/, '/')}
+    class="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-blue-600"
+    >EN</a
+  >
+  <span class="text-gray-300">|</span>
+  <a
+    href={Astro.url.pathname.startsWith('/es/')
+      ? Astro.url.pathname
+      : `/es${Astro.url.pathname}`}
+    class="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-blue-600"
+    >ES</a
+  >
+</div>

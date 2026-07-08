@@ -1,11 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog', ({ data }) => data.lang === 'en');
+  const posts = await getCollection('blog', ({ data }) => data.lang === 'es');
   return posts.map((post) => ({
-    params: { slug: post.slug },
+    params: { slug: post.data.originalSlug },
     props: post,
   }));
 }
@@ -20,7 +20,7 @@ const { Content } = await post.render();
       <div
         class="inline-flex items-center text-[10px] sm:text-xs font-mono font-bold text-blue-600 dark:text-blue-500 uppercase tracking-widest border border-blue-500/20 bg-blue-500/10 px-3 py-1 rounded-full"
       >
-        Blog Post
+        Artículo del Blog
       </div>
       <h1
         class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight"
@@ -52,15 +52,11 @@ const { Content } = await post.render();
         }
         <div class="text-sm">
           <div class="text-gray-900 dark:text-gray-200 font-bold text-base">
-            {
-              post.data.authors && post.data.authors.length > 0
-                ? post.data.authors.join(' & ')
-                : 'Aletheia'
-            }
+            {post.data.authors?.join(' & ') || 'Aletheia'}
           </div>
           <div class="text-gray-600 dark:text-gray-500">
-            Published on {
-              new Date(post.data.pubDate).toLocaleDateString('en-US', {
+            Publicado el {
+              new Date(post.data.pubDate).toLocaleDateString('es-ES', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
@@ -90,7 +86,7 @@ const { Content } = await post.render();
                   clip-rule="evenodd"
                 />
               </svg>
-              <span>View Source on GitHub</span>
+              <span>Ver código fuente en GitHub</span>
             </a>
           </div>
         )
@@ -98,17 +94,17 @@ const { Content } = await post.render();
     </header>
 
     <article
-      class="prose dark:prose-invert prose-lg prose-blue max-w-none prose-headings:font-extrabold prose-headings:tracking-tight prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-blockquote:border-blue-500 prose-pre:bg-gray-100 dark:prose-pre:bg-gray-900/50 prose-pre:border prose-pre:border-gray-200 dark:prose-pre:border-gray-800"
+      class="prose dark:prose-invert prose-lg prose-blue max-w-none prose-headings:font-extrabold prose-headings:tracking-tight prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-blockquote:border-blue-500 prose-pre:bg-gray-100 dark:prose-pre:bg-gray-900/50 prose-pre:border prose-pre:border-gray-800"
     >
       <Content />
     </article>
 
     <div class="mt-20 pt-12 border-t border-gray-200 dark:border-gray-900">
       <a
-        href="/blog"
+        href="/es/blog"
         class="inline-flex items-center text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-white font-bold transition-colors"
       >
-        <span class="mr-2">&larr;</span> Back to all articles
+        <span class="mr-2">&larr;</span> Volver a todos los artículos
       </a>
     </div>
   </div>
