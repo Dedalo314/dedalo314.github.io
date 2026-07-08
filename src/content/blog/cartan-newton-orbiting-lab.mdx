@@ -17,9 +17,9 @@ import Collapsible from '../../components/Collapsible.tsx';
   <LabIntro client:only="react" />
 </div>
 
-Imagine an astronaut floating freely inside an orbiting laboratory, like the International Space Station. From a purely Newtonian viewpoint, both the station and the astronaut are falling together, creating a sense of weightlessness. But what if the lab is rotating to keep one side facing the Earth? How do we describe the subtle, seemingly invisible forces that cause the astronaut to drift?
+Imagine an astronaut floating freely inside an orbiting laboratory, like the International Space Station. From a purely Newtonian viewpoint, both the station and the astronaut are falling together, creating a sense of weightlessness. But what if the lab is rotating to keep one side facing the Earth so that they can fall sleep with the views? How do we describe the subtle, seemingly invisible forces that the astronaut experiences is he gets away from the center of the lab?
 
-Instead of relying on the standard, often clunky, Newtonian kinematics of rotating frames, we can use the elegant language of differential geometry. By treating the astronaut and the lab's center of mass as two nearby particles moving along their respective worldlines, their relative motion is perfectly described by the **Geodesic Deviation Equation**:
+Instead of relying on the standard, often clunky, Newtonian kinematics of rotating frames, we can use the elegant language of differential geometry. By treating and the lab's center of mass and the astronaut as two nearby particles moving along their respective worldlines, their relative motion is perfectly described by the **Geodesic Deviation Equation**:
 
 $$\frac{D^2 n^\alpha}{d\lambda^2} + R^\alpha_{\beta\gamma\delta} \frac{dx^\beta}{d\lambda} n^\gamma \frac{dx^\delta}{d\lambda} = 0$$
 
@@ -34,13 +34,13 @@ To understand the relative motion, we must define two coordinate systems:
 - $(x, y, z)$: The strictly inertial frame (Earth-centered).
 - $(x', y', z')$: The rotating frame (lab-centered), where the $x'$-axis always points radially away from the Earth.
 
-The coordinate transformation between the inertial Earth-centered frame $\vec{x}$ and the rotating lab-centered frame $\vec{x}'$ is defined by a translation $\vec{R}(t)$ and a rotation $\mathbf{A}(t)$:
+The coordinate transformation between the inertial Earth-centered frame $\mathbf{x}$ and the rotating lab-centered frame $\mathbf{x}'$ is defined by a translation $\mathbf{R}(t)$ and a rotation $\mathbf{A}(t)$:
 
-$$\vec{x} = \vec{R}(t) + \mathbf{A}(t) \vec{x}'$$
+$$\vec{x} = \mathbf{R}(t) + \mathbf{A}(t) \vec{x}'$$
 
 Where:
 
-- $\vec{R}(t) = \begin{pmatrix} R \cos(\omega t) \\ R \sin(\omega t) \\ 0 \end{pmatrix}$ tracks the lab's orbit.
+- $\mathbf{R}(t) = \begin{pmatrix} R \cos(\omega t) \\ R \sin(\omega t) \\ 0 \end{pmatrix}$ tracks the lab's orbit.
 - $\mathbf{A}(t) = \begin{pmatrix} \cos(\omega t) & -\sin(\omega t) & 0 \\ \sin(\omega t) & \cos(\omega t) & 0 \\ 0 & 0 & 1 \end{pmatrix}$ rotates the local axes at orbital angular velocity $\omega$.
 
 In index notation, this is cleanly written as:
@@ -54,12 +54,14 @@ Because our local frame $(x', y', z')$ is rotating, it is a non-inertial frame. 
 
 When moving from the flat, inertial frame (where $\Gamma = 0$) to our rotating frame, we must use the transformation rule for connections:
 
-$$\Gamma^{i'}_{j'k'} = \frac{\partial x^{i'}}{\partial x^\alpha} \frac{\partial^2 x^\alpha}{\partial x^{j'} \partial x^{k'}}$$
+$$\Gamma^{i'}_{j'k'} = \langle \sigma^{i'}, \nabla_{k'}\mathbf{e}_{j'} \rangle = \frac{\partial x^{i'}}{\partial x^\alpha} \frac{\partial^2 x^\alpha}{\partial x^{j'} \partial x^{k'}}$$
 
-Since our transformation only depends on time ($t = x^{0'}$), the spatial derivatives vanish, leaving only the mixed space-time components $\Gamma^{i'}_{j'0'}$ non-zero. By applying the inverse rotation matrix and differentiating $\mathbf{A}(t)$ with respect to time, the matrix multiplication $\mathbf{A}^{-1} \dot{\mathbf{A}}$ yields the skew-symmetric angular velocity matrix.
+where $\mathbf{\sigma}^{i'}$ is the dual one-form of the coordinate basis $\mathbf{e}_{j'}$: $\langle \mathbf{\sigma}^{i'}, \mathbf{e}_{j'} \rangle = \delta^{i'}_{j'}$.
 
-For a rotation around the z-axis, the calculation gives exactly:
-$$\Gamma^{1'}_{2'0'} = -\omega, \quad \Gamma^{2'}_{1'0'} = \omega$$
+Since in Cartan-Newton spacetime time is universal ($t = x^{0'}$) and each space slice is flat, the spatial derivatives vanish, leaving only the mixed space-time components $\Gamma^{i'}_{j'0'}$ and the time component $\Gamma^{i'}_{0'0'}$ non-zero. By applying the inverse rotation matrix and differentiating $\mathbf{A}(t)$ with respect to time, the matrix multiplication $\mathbf{A}^{-1} \dot{\mathbf{A}}$ yields the skew-symmetric angular velocity matrix.
+
+Then, for a rotation around the z-axis, the calculation gives exactly:
+$$\Gamma^{1'}_{2'0'} = -\omega, \quad \Gamma^{2'}_{1'0'} = \omega,  \quad \Gamma^{i'}_{0'0'} = 0$$
 
 These coefficients are the geometric fingerprint of rotation.
 
@@ -67,7 +69,7 @@ These coefficients are the geometric fingerprint of rotation.
 
 ## 3. The First Covariant Derivative: Relative Velocity
 
-Now, let's look at the astronaut. We define a deviation vector $n^\alpha$ pointing from the lab's center to the astronaut. Since we are observing them at a simultaneous moment, $n^{0'} = 0$, leaving only the spatial distance $n^{i'}$.
+Now, let's look at the astronaut. We define a deviation vector $n^\alpha$ pointing from the lab's center to the astronaut. Since time is universal and $t = \lambda$, $n^{0'} = \left(\frac{\partial t}{\partial n^{0'}}\right)_\lambda = 0$, leaving only the spatial distance $n^{i'}$.
 
 The lab is at rest in its own frame, moving purely through time, so its 4-velocity is $u^\mu = \frac{dx^\mu}{dt} = (1, 0, 0, 0)$.
 
@@ -87,25 +89,53 @@ Physically, this is profound. The "true" geometric velocity is the apparent velo
 
 To get acceleration, we take the covariant derivative a second time:
 
-$$\frac{D^2 n^{i'}}{dt^2} = \frac{d}{dt} \left( \frac{Dn^{i'}}{dt} \right) + \Gamma^{i'}_{\beta'\mu'} \frac{dn^{\beta'}}{dt} \frac{dx^{\mu'}}{dt}$$
+$$\frac{D^2 n^{i'}}{dt^2} = \frac{d}{dt} \left( \frac{Dn^{i'}}{dt} \right) + \Gamma^{i'}_{\beta'\mu'} \frac{Dn^{\beta'}}{dt} \frac{dx^{\mu'}}{dt}$$
 
 Expanding this via the product rule and substituting our known $\Gamma$ values:
 
-$$\frac{D^2 n^{i'}}{dt^2} = \frac{d^2 n^{i'}}{dt^2} + 2\omega \left[ \delta^{2'}_{i'} \frac{dn^{1'}}{dt} - \delta^{1'}_{i'} \frac{dn^{2'}}{dt} \right] + (\text{centrifugal terms...})$$
+$$\frac{D^2 n^{i'}}{dt^2} = \frac{d^2 n^{i'}}{dt^2} + 2\omega \left[ \delta^{2'}_{i'} \frac{dn^{1'}}{dt} - \delta^{1'}_{i'} \frac{dn^{2'}}{dt} \right] - \omega^2\left[n^{1'}\delta^{1'}_{i'} + n^{2'}\delta^{2'}_{i'}\right]$$
 
-Look closely at the term multiplied by $2\omega$. The alternating velocity components $\frac{dn}{dt}$ are the exact index-notation equivalent of $2\vec{\omega} \times \dot{\vec{n}}$. Differential geometry has naturally derived the **Coriolis acceleration** purely from the curvature of our rotating coordinate system!
+Look closely at the terms generated by this geometric expansion.
+
+The term multiplied by $2\omega$ contains alternating velocity components $\frac{dn^{i'}}{dt}$, which is the exact index-notation equivalent of the classical Coriolis acceleration, $2\vec{\omega} \times \dot{\vec{n}}$. Meanwhile, the term multiplied by $\omega^2$ scales directly with the distance $n$ from the origin, representing the kinematic Centrifugal acceleration, $-\vec{\omega} \times (\vec{\omega} \times \vec{n})$.
+
+Without us having to manually paste in Newtonian corrections, the machinery of the second covariant derivative has naturally derived **both the Coriolis and Centrifugal accelerations purely from the geometric twist of our rotating coordinate system**!
 
 ---
 
 ## 5. Obtaining the Curvature Term ($R'$): Tidal Gravity
 
-The second half of the Geodesic Deviation Equation relies on the Riemann curvature tensor. It describes the actual tidal gravity of the Earth. To find $R^{i'}_{0'j'0'}$ in our rotating lab, we take the known tidal tensor in the Earth's inertial frame ($R^i_{0j0} = \partial_i \partial_j \Phi$) and apply the tensor transformation law using our rotation matrix $\mathbf{A}(t)$:
+The second half of the Geodesic Deviation Equation relies on the **Riemann curvature tensor**. It describes the actual tidal gravity of the Earth. In Newton-Cartan, all $R^{\alpha}_{\beta\gamma\delta}$ vanish but $R^{j}_{0k0} = - R^{j}_{00k} = \frac{\partial^2 \phi}{\partial x^j \partial x^k}$.
 
-Because the lab is in a stable circular orbit, Kepler's laws tie the orbital velocity to the gravitational gradient. When you crank through the tensor transformation, the math reveals a stunning simplification:
+To find $R^{i'}_{0'j'0'}$ in our rotating lab, we can make use of the geometric, abstract equation for $\mathbf{Riemann(...)}$. $\mathbf{Riemann(...)}$ is a geometric object, so it has physical meaning independently of our coordinate system, and the abstract equation will be valid even in our non-intertial, rotating lab. Let's find out the geometric equation in the Earth's inertial frame and then translate the equation to our coordinates in the lab's frame!
 
-$$R^{i'}_{0'j'0'} n^{j'} = -\omega^2 \left[ n^{1'} \delta^{1'}_{i'} + n^{2'} \delta^{2'}_{i'} \right] + \text{residual tidal terms}$$
+From Newton we know that (normalized constants so $G = 1$):
 
-This expression, proportional to $\omega^2$ and position $n$, is geometrically equivalent to $-\vec{\omega} \times (\vec{\omega} \times \vec{n})$. This is the **Centrifugal force**, intimately entangled with the actual tidal squeezing of Earth's gravity.
+$$\phi = \frac{-GM}{r} = - \frac{M}{r}$$.
+
+And carefully taking the derivatives $\partial_i \partial_j \phi$:
+
+$$R^{j}_{0k0} = - R^{j}_{00k} = \frac{M}{r^3}\left[ \delta^{j}_{k} - 3\frac{x^k x^j}{r^2} \right]$$,
+
+where $r = \left( \sum_i x^i x^i \right)^{1/2}$.
+
+Now, we can infer the abstract spacetime equation that leads to the coordinate equation by promoting to tensors:
+
+$$\mathbf{R} = \frac{M}{r^3}\left( \mathbf{P} - 3 \mathbf{\hat{r}}\otimes \mathbf{\hat{r}} \right)\mathbf{d}t\mathbf{d}t$$,
+
+where $\mathbf{\hat{r}} = \mathbf{x}_{lab center} / r$ is a unit vector pointing radially outward from the source and $\mathbf{P}$ is the spatial projection matrix (diagonal matrix, identity in space and 0 in time).
+
+Again, as this is a geometric, abstract notation spacetime equation, it must work in the lab's coordinates $x^{\alpha'}$ too! And as $x^{1'}$ always points outwards radially due to the rotation of the lab, $\mathbf{\hat{r}'} = \left(0,1,0,0 \right)$ (easy right?). Then we get:
+
+$$R^{j'}_{0'k'0'} = - R^{j'}_{0'0'k'} = \frac{M}{r^3}\begin{pmatrix} -2 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix} = \omega^2\begin{pmatrix} -2 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix}$$,
+
+and $R^{\alpha'}_{\beta'\gamma'\delta'} = 0$ elsewhere (coherent with Cartan-Newton geometry).
+
+Finally, the term for the Geodesic Deviation Equation results in
+
+$$R^{i'}_{0'j'0'} n^{j'} = \omega^2 \left[-2 n^{1'}\delta^{i'}_{1'} + n^{2'} \delta^{i'}_{2'} + n^{3'} \delta^{i'}_{3'} \right]$$.
+
+This expression, proportional to $\omega^2$ and the deviation position $n$, represents the true gravitational tidal forces of the Earth. Instead of a fictitious artifact of rotation, this curvature term captures the real physical stretching and squeezing—the gravity gradient—caused by the fact that the astronaut is at a slightly different point in Earth's gravity well than the lab's center of mass.
 
 ---
 
@@ -113,33 +143,38 @@ This expression, proportional to $\omega^2$ and position $n$, is geometrically e
 
 Putting it all together, the geodesic deviation equation, when projected onto our rotating local frame, yields the following coupled system of second-order differential equations:
 
-$$\frac{d^2 n^{1'}}{dt^2} = 2\omega \frac{dn^{2'}}{dt} + 3\omega^2 n^{1'}$$
-$$\frac{d^2 n^{2'}}{dt^2} = -2\omega \frac{dn^{1'}}{dt}$$
-$$\frac{d^2 n^{3'}}{dt^2} = -\omega^2 n^{3'}$$
+$$\frac{d^2 n^{1'}}{dt^2} - 2\omega \frac{dn^{2'}}{dt} - 3\omega^2 n^{1'} = 0$$,
 
-(Here $n^{1'} = x$, $n^{2'} = y$, and $n^{3'} = z$). These are equations governing the motion of an object thrown by the astronaut. In orbital mechanics, these are famously known as the **Clohessy-Wiltshire** (or Hill's) equations.
+$$\frac{d^2 n^{2'}}{dt^2} + 2\omega \frac{dn^{1'}}{dt}= 0$$,
+
+$$\frac{d^2 n^{3'}}{dt^2} + \omega^2 n^{3'} = 0$$.
+
+These are equations governing the motion of the astronaut relative to the lab's center of mass, if slightly pushed (locally). In orbital mechanics, these are famously known as the **Clohessy-Wiltshire** (or Hill's) equations.
 
 ---
 
 ## 7. The Boomerang Effect: Proving the Oscillation
 
-If you throw an object purely radially outward ($+x$ direction), you might expect it to float away forever. Instead, the object loops backward and eventually returns exactly to your hand. We can prove this mathematically.
+If you throw an object (or the astronaut) purely radially outward ($+x'$ direction), you might expect it to float away forever. Instead, the object loops backward and eventually returns exactly to your hand. We can prove this mathematically.
 
-Let's assume initial conditions: $x(0) = 0$, $y(0) = 0$, $\dot{x}(0) = v_0$, and $\dot{y}(0) = 0$.
+Let's assume initial conditions: $x'(0) = 0$, $y'(0) = 0$, $\dot{x'}(0) = v_0$, and $\dot{y'}(0) = 0$. As $\mathbf{n'}$ is the separation vector from the lab's center (fidutial geodesic), spatially it's the same as the position of the object in $x^{i'}$ coordinates (not in time-dimension, t vs 0, but time-dimension is not involved due to Cartan-Newton geometry!).
 
 If we integrate the second equation once, we get:
-$$\dot{y} = -2\omega x$$
+$$\dot{y'} = -2\omega x$$
 
 Substitute this back into the first equation:
-$$\ddot{x} = 2\omega(-2\omega x) + 3\omega^2 x$$
-$$\ddot{x} = -4\omega^2 x + 3\omega^2 x$$
-$$\ddot{x} + \omega^2 x = 0$$
+
+$$\ddot{x'} = 2\omega(-2\omega x') + 3\omega^2 x' \Rightarrow \ddot{x'} = -4\omega^2 x' + 3\omega^2 x' \Rightarrow \ddot{x'} + \omega^2 x' = 0$$.
 
 The fictitious forces perfectly collapse into a **simple harmonic oscillator** with frequency $\omega$. Solving this system yields a closed, periodic ellipse:
-$$x(t) = \frac{v_0}{\omega}\sin(\omega t)$$
-$$y(t) = \frac{2v_0}{\omega}(\cos(\omega t) - 1)$$
 
-When the clock hits one orbital period ($t = \frac{2\pi}{\omega}$), $\sin(2\pi) = 0$ and $\cos(2\pi) = 1$. The object returns exactly to $(0,0)$.
+$$x'(t) = \frac{v_0}{\omega}\sin(\omega t)$$
+
+$$y'(t) = \frac{2v_0}{\omega}(\cos(\omega t) - 1)$$.
+
+And from the third equation, it's trivial that $z'(t) = 0$. As expected the object stays in the X'Y'-plane.
+
+Finally, note that when the clock hits one orbital period ($t = \frac{2\pi}{\omega}$), $\sin(2\pi) = 0$ and $\cos(2\pi) = 1$. The object returns exactly to $(0,0)$!.
 
 ### The Inertial Perspective
 
