@@ -80,16 +80,33 @@ const { title } = Astro.props;
           <div class="flex items-center space-x-4 sm:space-x-8">
             <a
               href="/blog"
-              class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-white transition-colors"
-              >Blog</a
+              class="nav-link text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-white transition-colors"
+              data-en="Blog"
+              data-es="Blog">Blog</a
             >
             <a
               href="/about"
-              class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-white transition-colors"
-              >About</a
+              class="nav-link text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-white transition-colors"
+              data-en="About"
+              data-es="Sobre nosotros">About</a
             >
           </div>
           <ThemeToggle />
+          <div
+            class="flex items-center gap-2 border-l border-gray-200 dark:border-gray-800 pl-4"
+          >
+            <button
+              id="lang-toggle-en"
+              class="text-xs font-bold uppercase text-gray-500 hover:text-blue-500"
+              >EN</button
+            >
+            <span class="text-gray-300 dark:text-gray-700">/</span>
+            <button
+              id="lang-toggle-es"
+              class="text-xs font-bold uppercase text-gray-500 hover:text-blue-500"
+              >ES</button
+            >
+          </div>
         </div>
       </nav>
     </header>
@@ -112,7 +129,11 @@ const { title } = Astro.props;
         >
           Aletheia
         </div>
-        <p class="text-sm text-gray-500 dark:text-gray-600">
+        <p
+          class="text-sm text-gray-500 dark:text-gray-600 footer-text"
+          data-en="The underlying principles of the universe and the intelligence that strives to understand it."
+          data-es="Los principios fundamentales del universo y la inteligencia que se esfuerza por comprenderlo."
+        >
           The underlying principles of the universe and the intelligence that
           strives to understand it.
         </p>
@@ -121,5 +142,54 @@ const { title } = Astro.props;
         </div>
       </div>
     </footer>
+    <script>
+      function setLanguage(lang: string) {
+        document.documentElement.lang = lang;
+        localStorage.setItem('lang', lang);
+
+        // Standard translatable elements
+        document
+          .querySelectorAll(
+            '.nav-link, .footer-text, .translate-text, [data-en][data-es]'
+          )
+          .forEach((el) => {
+            const translated = el.getAttribute('data-' + lang);
+            if (translated) (el as HTMLElement).textContent = translated;
+          });
+
+        // Highlight active button
+        const enBtn = document.getElementById('lang-toggle-en');
+        const esBtn = document.getElementById('lang-toggle-es');
+        if (enBtn) enBtn.classList.toggle('text-blue-500', lang === 'en');
+        if (esBtn) esBtn.classList.toggle('text-blue-500', lang === 'es');
+
+        const path = window.location.pathname;
+
+        // Redirect logic
+        if (
+          lang === 'es' &&
+          path.startsWith('/blog/') &&
+          !path.startsWith('/es/')
+        ) {
+          window.location.pathname = path.replace('/blog/', '/es/blog/');
+        } else if (lang === 'en' && path.startsWith('/es/blog/')) {
+          window.location.pathname = path.replace('/es/blog/', '/blog/');
+        } else {
+          window.dispatchEvent(new Event('storage'));
+        }
+      }
+
+      document
+        .getElementById('lang-toggle-en')
+        ?.addEventListener('click', () => setLanguage('en'));
+      document
+        .getElementById('lang-toggle-es')
+        ?.addEventListener('click', () => setLanguage('es'));
+
+      const savedLang =
+        localStorage.getItem('lang') ||
+        (navigator.language.startsWith('es') ? 'es' : 'en');
+      setLanguage(savedLang);
+    </script>
   </body>
 </html>
