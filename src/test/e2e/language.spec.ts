@@ -31,14 +31,12 @@ test('Global language toggle changes language', async ({ page }) => {
     console.log('Current URL after failed redirect wait:', page.url());
     throw e;
   }
-  await expect(page.locator('header h1')).toContainText(
-    'El Laboratorio en Órbita'
-  );
+  await expect(page.locator('header h1')).toContainText('gravedad de Newton');
 
   // Switch back to English
   await page.click('#lang-toggle-en');
   await page.waitForURL(/.*\/blog\/.*/);
-  await expect(page.locator('header h1')).toContainText('The Orbiting Lab');
+  await expect(page.locator('header h1')).toContainText('Newtonian Gravity');
 });
 
 test('Blog index filters by language', async ({ page }) => {

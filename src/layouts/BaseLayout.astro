@@ -81,13 +81,11 @@ const { title } = Astro.props;
             <a
               href="/blog"
               class="nav-link text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-white transition-colors"
-              data-en="Blog"
               data-es="Blog">Blog</a
             >
             <a
               href="/about"
               class="nav-link text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-white transition-colors"
-              data-en="About"
               data-es="Sobre nosotros">About</a
             >
           </div>
@@ -131,7 +129,6 @@ const { title } = Astro.props;
         </div>
         <p
           class="text-sm text-gray-500 dark:text-gray-600 footer-text"
-          data-en="The underlying principles of the universe and the intelligence that strives to understand it."
           data-es="Los principios fundamentales del universo y la inteligencia que se esfuerza por comprenderlo."
         >
           The underlying principles of the universe and the intelligence that
@@ -150,11 +147,16 @@ const { title } = Astro.props;
         // Standard translatable elements
         document
           .querySelectorAll(
-            '.nav-link, .footer-text, .translate-text, [data-en][data-es]'
+            '.nav-link, .footer-text, .translate-text, [data-es]'
           )
           .forEach((el) => {
+            // Use existing content as English source if not already stored
+            if (!el.hasAttribute('data-en')) {
+              el.setAttribute('data-en', el.innerHTML.trim());
+            }
+
             const translated = el.getAttribute('data-' + lang);
-            if (translated) (el as HTMLElement).textContent = translated;
+            if (translated) (el as HTMLElement).innerHTML = translated;
           });
 
         // Highlight active button
@@ -169,10 +171,17 @@ const { title } = Astro.props;
         if (
           lang === 'es' &&
           path.startsWith('/blog/') &&
-          !path.startsWith('/es/')
+          !path.startsWith('/es/') &&
+          path !== '/blog' &&
+          path !== '/blog/'
         ) {
           window.location.pathname = path.replace('/blog/', '/es/blog/');
-        } else if (lang === 'en' && path.startsWith('/es/blog/')) {
+        } else if (
+          lang === 'en' &&
+          path.startsWith('/es/blog/') &&
+          path !== '/es/blog' &&
+          path !== '/es/blog/'
+        ) {
           window.location.pathname = path.replace('/es/blog/', '/blog/');
         } else {
           window.dispatchEvent(new Event('storage'));
