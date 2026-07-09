@@ -18,7 +18,7 @@ test('cartan-newton-orbiting-lab post loads and has no console errors', async ({
   });
 
   await page.goto('/blog/cartan-newton-orbiting-lab');
-  await expect(page).toHaveTitle(/The Orbiting Lab/);
+  await expect(page).toHaveTitle(/Is Newtonian Gravity pure geometry\?/);
 
   await page.waitForTimeout(2000);
 

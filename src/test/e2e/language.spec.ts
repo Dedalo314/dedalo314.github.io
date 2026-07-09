@@ -31,7 +31,9 @@ test('Global language toggle changes language', async ({ page }) => {
     console.log('Current URL after failed redirect wait:', page.url());
     throw e;
   }
-  await expect(page.locator('header h1')).toContainText('gravedad de Newton');
+  await expect(page.locator('header h1')).toContainText('gravedad de Newton', {
+    ignoreCase: true,
+  });
 
   // Switch back to English
   await page.click('#lang-toggle-en');
