@@ -200,5 +200,11 @@ const { title } = Astro.props;
         (navigator.language.startsWith('es') ? 'es' : 'en');
       setLanguage(savedLang);
     </script>
+    <!-- Cloudflare Web Analytics -->
+    <script
+      type="module"
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "c9a143c263f9483d948b98965cde3271"}'
+    ></script><!-- End Cloudflare Web Analytics -->
   </body>
 </html>
