@@ -18,13 +18,17 @@ import Collapsible from '../../components/Collapsible.tsx';
   <LabIntro client:only="react" />
 </div>
 
-Imagina a un astronauta flotando libremente dentro de un laboratorio en órbita, como la Estación Espacial Internacional. Desde un punto de vista puramente newtoniano, tanto la estación como el astronauta están cayendo juntos, creando una sensación de ingravidez. Pero, ¿qué pasa si el laboratorio está rotando para mantener un lado mirando hacia la Tierra de modo que puedan dormir con las vistas? ¿Cómo describimos las fuerzas sutiles y aparentemente invisibles que experimenta el astronauta a medida que se aleja del centro del laboratorio?
+Imagina a un astronauta flotando libremente dentro de un laboratorio en órbita, como la Estación Espacial Internacional. Desde un punto de vista puramente newtoniano, tanto la estación como el astronauta están cayendo juntos alrededor de la Tierra, lo que da lugar a la sensación de ingravidez.
 
-En lugar de confiar en la cinemática newtoniana estándar de sistemas rotatorios, que a menudo es farragosa, podemos usar el elegante lenguaje de la geometría diferencial. Al tratar el centro de masa del laboratorio y al astronauta como dos partículas cercanas que se mueven a lo largo de sus respectivas líneas de universo, su movimiento relativo queda perfectamente descrito por la **Ecuación de Desviación Geodésica**:
+Pero, ¿qué ocurre si el laboratorio rota para mantener siempre el mismo lado orientado hacia la Tierra, de modo que puedan dormirse con vistas al planeta? En ese caso, si el astronauta se aleja del centro, comenzará a experimentar fuerzas aparentes —como la centrífuga y la de Coriolis— que surgen al describir el movimiento desde un sistema de referencia en rotación. Todos estos efectos están completamente explicados dentro de la mecánica newtoniana estándar.
+
+Sin embargo, en lugar de recurrir a la cinemática habitual de sistemas rotatorios, que a menudo resulta algo farragosa, podemos describir exactamente la misma física utilizando el lenguaje de la geometría diferencial. En la formulación de Newton–Cartan —una reformulación geométrica de la gravedad newtoniana— podemos tratar el centro de masas del laboratorio y al astronauta como dos partículas cercanas que se mueven a lo largo de sus respectivas líneas de universo. Su movimiento relativo queda entonces perfectamente descrito por la **ecuación de desviación geodésica**:
 
 $$\frac{D^2 n^\alpha}{d\lambda^2} + R^\alpha_{\beta\gamma\delta} \frac{dx^\beta}{d\lambda} n^\gamma \frac{dx^\delta}{d\lambda} = 0$$
 
-En este artículo, desglosaremos esta ecuación paso a paso. Veremos cómo la maquinaria matemática de las derivadas covariantes (los coeficientes de conexión) y la curvatura del espacio-tiempo (el tensor de Riemann) escupen naturalmente las conocidas fuerzas ficticias —Coriolis y Centrífuga— sin que tengamos que añadirlas a mano. Luego, visualizaremos la sorprendente mecánica orbital que surge de estas ecuaciones.
+En este artículo desglosaremos esta ecuación paso a paso. Veremos cómo la maquinaria matemática de las derivadas covariantes (a través de los coeficientes de conexión) y la curvatura (mediante el tensor de Riemann) reproduce de forma natural los efectos inerciales conocidos —como las fuerzas centrífuga y de Coriolis— sin necesidad de introducirlos a mano. Finalmente, utilizaremos esta perspectiva para visualizar el movimiento orbital desde un punto de vista más geométrico.
+
+Esta presentación está inspirada, en parte, en la visión geométrica desarrollada en _Gravitation_, de Misner, Thorne y Wheeler. Dicho esto, no soy un experto en el tema: este artículo es tanto un ejercicio de aprendizaje como de explicación. Si encuentras errores, ambigüedades o tienes cualquier sugerencia, ¡no dudes en hacérmelo saber!
 
 ---
 

@@ -17,13 +17,17 @@ import Collapsible from '../../components/Collapsible.tsx';
   <LabIntro client:only="react" />
 </div>
 
-Imagine an astronaut floating freely inside an orbiting laboratory, like the International Space Station. From a purely Newtonian viewpoint, both the station and the astronaut are falling together, creating a sense of weightlessness. But what if the lab is rotating to keep one side facing the Earth so that they can fall sleep with the views? How do we describe the subtle, seemingly invisible forces that the astronaut experiences is he gets away from the center of the lab?
+Imagine an astronaut floating freely inside an orbiting laboratory, like the International Space Station. From a purely Newtonian viewpoint, both the station and the astronaut are falling together around the Earth, creating a sense of weightlessness.
 
-Instead of relying on the standard, often clunky, Newtonian kinematics of rotating frames, we can use the elegant language of differential geometry. By treating and the lab's center of mass and the astronaut as two nearby particles moving along their respective worldlines, their relative motion is perfectly described by the **Geodesic Deviation Equation**:
+But what if the lab is rotating to keep one side facing the Earth, so that they can fall asleep with a constant view of the planet? In that case, if the astronaut drifts away from the center, they will experience apparent forces—such as centrifugal and Coriolis effects—that arise from describing motion in a rotating frame. All of these effects are completely accounted for within standard Newtonian mechanics.
+
+However, instead of relying on the standard, often clunky, kinematics of rotating frames, we can describe the same physics using the elegant language of differential geometry. In the Newton–Cartan formulation—a geometric reformulation of Newtonian gravity—we can treat the lab’s center of mass and the astronaut as two nearby particles moving along their respective worldlines. Their relative motion is then perfectly described by the **Geodesic Deviation Equation**:
 
 $$\frac{D^2 n^\alpha}{d\lambda^2} + R^\alpha_{\beta\gamma\delta} \frac{dx^\beta}{d\lambda} n^\gamma \frac{dx^\delta}{d\lambda} = 0$$
 
-In this post, we will unpack this equation step-by-step. We'll see how the mathematical machinery of covariant derivatives (the connection coefficients) and spacetime curvature (the Riemann tensor) naturally spit out the familiar fictitious forces—Coriolis and Centrifugal—without us having to add them by hand. Then, we will visualize the surprising orbital mechanics that emerge from these equations.
+In this post, we will unpack this equation step by step. We will see how the mathematical machinery of covariant derivatives (through the connection coefficients) and curvature (through the Riemann tensor) naturally reproduces the familiar inertial effects—Coriolis and centrifugal—without having to introduce them by hand. Then, we will visualize the orbital behavior that emerges from this geometric perspective.
+
+This presentation is inspired in part by the geometric viewpoint developed in _Gravitation_ by Misner, Thorne, and Wheeler. That said, I am not an expert in this subject—this is a learning exercise as much as an explanation. If you spot mistakes, ambiguities, or have suggestions for improvement, I would genuinely appreciate hearing from you.
 
 ---
 
