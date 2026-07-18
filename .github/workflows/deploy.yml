@@ -32,7 +32,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Build site
-        run: npm run build
+        run: PUBLIC_ANALYTICS_ENABLED=false npm run build
 
       - name: Run Playwright tests
         run: npx playwright test
@@ -63,7 +63,7 @@ jobs:
         run: npm ci
 
       - name: Build Astro
-        run: npm run build
+        run: PUBLIC_ANALYTICS_ENABLED=true npm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
